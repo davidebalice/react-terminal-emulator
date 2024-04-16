@@ -1,10 +1,11 @@
-import React, { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import { Terminal } from "./Components/Terminal";
+import useCommands from "./Components/Terminal/useCommands";
 import { useTerminal } from "./Components/Terminal/useTerminal";
 
 function App() {
-  const { history, pushToHistory, setTerminalRef, resetTerminal } =
-    useTerminal();
+  const { history, pushToHistory, setTerminalRef, resetTerminal } = useTerminal();
+  const commands = useCommands(pushToHistory);
 
   useEffect(() => {
     resetTerminal();
@@ -21,16 +22,16 @@ function App() {
 {"     "}.*.   *%%%%%%%%%%%%*. -%%%%%%%%%%%=   .*.<br/>
 {"           "}*%%%%%%%##*=. :+%%%%%%%%+=:<br/>
       </div>
-      <div><br/>DB Terminal emulator</div>
-      <div style={{ fontSize: 20 }}>Lorem Ipsum</div>
+      <div><br/>DB Terminal emulator 0.8 developed in React, Typescript and Css</div>
       <br />
 
-
-        <div>Insert command....</div>
+        <div>
+          Type <b>help</b> to view list of commands
+        </div>
       </>
     );
   }, []);
-
+  /*
   const commands = useMemo(
     () => ({
       start: async () => {
@@ -43,7 +44,7 @@ function App() {
           </>
         );
       },
-      alert: async () => {
+      ls: async () => {
         alert("Hello!");
         await pushToHistory(
           <>
@@ -59,7 +60,7 @@ function App() {
     }),
     [pushToHistory]
   );
-
+*/
   return (
     <div className="App">
       <Terminal
