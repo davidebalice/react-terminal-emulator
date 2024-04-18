@@ -2,22 +2,17 @@ import './terminal.css';
 import {ForwardedRef, forwardRef, useCallback, useEffect, useRef, useState} from "react";
 import {TerminalProps} from "./types";
 
-
 export const Terminal = forwardRef(
   (props: TerminalProps, ref: ForwardedRef<HTMLDivElement>) => {
     const {
       history = [],
       promptLabel = '>',
-
       commands = {},
     } = props;
 
     const inputRef = useRef<HTMLInputElement>();
     const [input, setInputValue] = useState<string>('');
 
-    /**
-     * Focus on the input whenever we render the terminal or click in the terminal
-     */
     useEffect(() => {
       inputRef.current?.focus();
     });
@@ -26,10 +21,6 @@ export const Terminal = forwardRef(
       inputRef.current?.focus();
     }, []);
 
-
-    /**
-     * When user types something, we update the input value
-     */
     const handleInputChange = useCallback(
       (e: React.ChangeEvent<HTMLInputElement>) => {
         setInputValue(e.target.value);
@@ -37,9 +28,6 @@ export const Terminal = forwardRef(
       []
     );
 
-    /**
-     * When user presses enter, we execute the command
-     */
     const handleInputKeyDown = useCallback(
       (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {

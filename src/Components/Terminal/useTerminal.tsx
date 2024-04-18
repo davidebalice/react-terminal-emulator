@@ -1,11 +1,16 @@
-import {useCallback, useEffect, useState} from 'react';
-import {TerminalHistory, TerminalHistoryItem, TerminalPushToHistoryWithDelayProps} from "./types";
-
+import { useCallback, useEffect, useState } from "react";
+import {
+  TerminalHistory,
+  TerminalHistoryItem,
+  TerminalPushToHistoryWithDelayProps,
+} from "./types";
 
 export const useTerminal = () => {
   const [terminalRef, setDomNode] = useState<HTMLDivElement>();
-  const setTerminalRef = useCallback((node: HTMLDivElement) => setDomNode(node), []);
-
+  const setTerminalRef = useCallback(
+    (node: HTMLDivElement) => setDomNode(node),
+    []
+  );
   const [history, setHistory] = useState<TerminalHistory>([]);
 
   /**
@@ -15,13 +20,13 @@ export const useTerminal = () => {
     const windowResizeEvent = () => {
       terminalRef?.scrollTo({
         top: terminalRef?.scrollHeight ?? 99999,
-        behavior: 'smooth',
+        behavior: "smooth",
       });
     };
-    window.addEventListener('resize', windowResizeEvent);
+    window.addEventListener("resize", windowResizeEvent);
 
     return () => {
-      window.removeEventListener('resize', windowResizeEvent);
+      window.removeEventListener("resize", windowResizeEvent);
     };
   }, [terminalRef]);
 
@@ -31,7 +36,7 @@ export const useTerminal = () => {
   useEffect(() => {
     terminalRef?.scrollTo({
       top: terminalRef?.scrollHeight ?? 99999,
-      behavior: 'smooth',
+      behavior: "smooth",
     });
   }, [history, terminalRef]);
 
@@ -40,10 +45,7 @@ export const useTerminal = () => {
   }, []);
 
   const pushToHistoryWithDelay = useCallback(
-    ({
-        delay = 0,
-        content,
-      }: TerminalPushToHistoryWithDelayProps) =>
+    ({ delay = 0, content }: TerminalPushToHistoryWithDelayProps) =>
       new Promise((resolve) => {
         setTimeout(() => {
           pushToHistory(content);
@@ -67,5 +69,6 @@ export const useTerminal = () => {
     terminalRef,
     setTerminalRef,
     resetTerminal,
+    setHistory,
   };
 };
