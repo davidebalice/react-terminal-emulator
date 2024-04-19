@@ -13,9 +13,6 @@ export const useTerminal = () => {
   );
   const [history, setHistory] = useState<TerminalHistory>([]);
 
-  /**
-   * Scroll to the bottom of the terminal when window is resized
-   */
   useEffect(() => {
     const windowResizeEvent = () => {
       terminalRef?.scrollTo({
@@ -30,9 +27,6 @@ export const useTerminal = () => {
     };
   }, [terminalRef]);
 
-  /**
-   * Scroll to the bottom of the terminal on every new history item
-   */
   useEffect(() => {
     terminalRef?.scrollTo({
       top: terminalRef?.scrollHeight ?? 99999,
@@ -55,9 +49,6 @@ export const useTerminal = () => {
     [pushToHistory]
   );
 
-  /**
-   * Reset the terminal window
-   */
   const resetTerminal = useCallback(() => {
     setHistory([]);
   }, []);

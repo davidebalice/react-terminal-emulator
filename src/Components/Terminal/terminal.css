@@ -1,81 +1,96 @@
 .terminal {
-    height: 100%;
-    overflow-y: auto;
-    background-color: #3C3C3C;
-    color: #C4C4C4;
-    padding: 35px 45px;
-    font-size: 14px;
-    line-height: 1.42;
-    font-family: 'IBM Plex Mono', Consolas, Menlo, Monaco, 'Courier New', Courier,
+  height: 100%;
+  overflow-y: auto;
+  background-color: #3c3c3c;
+  color: #c4c4c4;
+  padding: 35px 45px;
+  font-size: 14px;
+  line-height: 1.42;
+  font-family: "IBM Plex Mono", Consolas, Menlo, Monaco, "Courier New", Courier,
     monospace;
-    text-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
-    position: relative;
+  text-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+  position: relative;
 }
 
 .terminal__line {
-    line-height: 2;
-    white-space: pre-wrap;
+  line-height: 2;
+  white-space: pre-wrap;
 }
 
 .terminal__prompt {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .terminal__prompt__label {
-    flex: 0 0 auto;
-    color: #F9EF00;
+  flex: 0 0 auto;
+  color: #f9ef00;
 }
 
 .terminal__prompt__input {
-    flex: 1;
-    margin-left: 1rem;
-    display: flex;
-    align-items: center;
-    color: white;
+  flex: 1;
+  margin-left: 1rem;
+  display: flex;
+  align-items: center;
+  color: white;
 }
 
 .terminal__prompt__input input {
-    flex: 1;
-    width: 100%;
-    background-color: transparent;
-    color: white;
-    border: 0;
-    outline: none;
-    font-size: 14px;
-    line-height: 1.42;
-    font-family: 'IBM Plex Mono', Consolas, Menlo, Monaco, 'Courier New', Courier,
+  flex: 1;
+  width: 100%;
+  background-color: transparent;
+  color: white;
+  border: 0;
+  outline: none;
+  font-size: 14px;
+  line-height: 1.42;
+  font-family: "IBM Plex Mono", Consolas, Menlo, Monaco, "Courier New", Courier,
     monospace;
 }
 
 .terminal__row {
-    display:flex;
-    clear: both;
-    margin:0;
-    padding: 0;
-    height:30px;
+  display: flex;
+  clear: both;
+  margin: 0;
+  padding: 0;
+  height: 30px;
 }
 
 .terminal__command {
-    display:flex;
-    clear: both;
-    margin:0;
-    padding: 0;
-    width:140px;
-    font-weight: bold;
-    color:#fff;
+  display: flex;
+  clear: both;
+  margin: 0;
+  padding: 0;
+  width: 200px;
+  font-weight: bold;
+  color: #fff;
 }
 
 .terminal__command__text {
-    display:flex;
-    margin:0;
-    padding: 0;
-    clear: both;
-    width:400px;
+  display: flex;
+  margin: 0;
+  padding: 0;
+  clear: both;
 }
 
+.filesystem__row {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  clear: both;
+}
 
+.filesystem__row__directory {
+  width: 200px;
+  margin: 0;
+  padding: 0;
+}
 
-
-
-
+.filesystem__row__file {
+  width: 200px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden; 
+  margin: 0;
+  padding: 0;
+}

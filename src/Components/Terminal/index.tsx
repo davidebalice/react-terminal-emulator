@@ -1,17 +1,28 @@
-import './terminal.css';
-import {ForwardedRef, forwardRef, useCallback, useEffect, useRef, useState} from "react";
-import {TerminalProps} from "./types";
+import {
+  ForwardedRef,
+  forwardRef,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import "./terminal.css";
+import { TerminalProps } from "./types";
 
 export const Terminal = forwardRef(
   (props: TerminalProps, ref: ForwardedRef<HTMLDivElement>) => {
-    const {
-      history = [],
-      promptLabel = '>',
-      commands = {},
-    } = props;
+    const { history = [], promptLabel = ">", commands = {} } = props;
 
     const inputRef = useRef<HTMLInputElement>();
-    const [input, setInputValue] = useState<string>('');
+    const [input, setInputValue] = useState<string>("");
+    const [commandsHistory, setCommandsHistory] = useState<string[]>([]);
+    const [currentIndex, setCurrentIndex] = useState<number>(0);
+    const [newCommand, setNewCommand] = useState<string>("");
+
+    console.log("commandsHistory");
+    console.log(commandsHistory);
+    console.log("commandsHistory posizione 0");
+    console.log(commandsHistory[0]);
 
     useEffect(() => {
       inputRef.current?.focus();
@@ -30,37 +41,107 @@ export const Terminal = forwardRef(
 
     const handleInputKeyDown = useCallback(
       (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter') {
+        if (e.key === "Enter") {
           const commandToExecute = commands?.[input.toLowerCase()];
           if (commandToExecute) {
             commandToExecute?.();
+            setInputValue("");
+            //setNewCommand(input.toLowerCase());
+            const newCommands = [...commandsHistory, input.toLowerCase()];
+            console.log(newCommands);
+            if (newCommands) {
+              setCommandsHistory(newCommands);
+            }
           }
-          setInputValue('');
         }
       },
       [commands, input]
     );
 
+    useEffect(() => {
+      const handleKeyUp = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === "ArrowUp") {
+          setCurrentIndex((prevIndex) => {
+            const newCurrentIndex = Math.min(prevIndex + 1, commandsHistory.length - 1);
+            //const newCurrentIndex = prevIndex + 1;
+            console.log("newCurrentIndex:", newCurrentIndex);
+
+            const lastCommand = commandsHistory[newCurrentIndex];
+            console.log(commandsHistory);
+            console.log("lastCommand");
+            console.log(lastCommand);
+            setInputValue(lastCommand || "");
+            return newCurrentIndex;
+          });
+        } else if (event.key === "ArrowDown") {
+          setCurrentIndex((prevIndex) => {
+            const newCurrentIndex = Math.max(prevIndex - 1, 0);
+            const lastCommand = commandsHistory[newCurrentIndex];
+            console.log("newCurrentIndex:", newCurrentIndex);
+            console.log(lastCommand);
+            setInputValue(lastCommand || "");
+            return newCurrentIndex;
+          });
+        }
+      };
+
+      window.addEventListener("keyup", handleKeyUp as any);
+      return () => window.removeEventListener("keyup", handleKeyUp as any);
+    }, [commandsHistory]);
+
+    /*
+    useEffect(() => {
+      const handleKeyUp = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === "ArrowUp") {
+          setCurrentIndex((prevIndex) =>
+            Math.min(prevIndex + 1, commandsHistory.length - 1)
+          );
+        } else if (event.key === "ArrowDown") {
+          setCurrentIndex((prevIndex) => Math.max(prevIndex - 1, 0));
+        }
+      };
+
+      window.addEventListener("keyup", handleKeyUp as any);
+
+      return () => {
+        //window.removeEventListener("keyup", handleKeyUp as any);
+      };
+    }, [commandsHistory, currentIndex]);
+
+    useEffect(() => {
+      if (newCommand) {
+        setCommandsHistory((prevCommands) => [
+          ...prevCommands,
+          newCommand.toLowerCase(),
+        ]);
+      }
+    }, [newCommand]);
+*/
     return (
-    <div className="terminal" ref={ref} onClick={focusInput}>
-      {history.map((line, index) => (
-        <div className="terminal__line" key={`terminal-line-${index}-${line}`}>
-          {line}
-        </div>
-      ))}
-      <div className="terminal__prompt">
-        <div className="terminal__prompt__label">{promptLabel}</div>
-        <div className="terminal__prompt__input">
-          <input
-            type="text"
-            value={input}
-            onKeyDown={handleInputKeyDown}
-            onChange={handleInputChange}
-            // @ts-ignore
-            ref={inputRef}
-          />
+      <div className="terminal" ref={ref} onClick={focusInput}>
+        {history.map((line, index) => (
+          <div
+            className="terminal__line"
+            key={`terminal-line-${index}-${line}`}
+          >
+            {line}
+          </div>
+        ))}
+        <div className="terminal__prompt">
+          <div className="terminal__prompt__label">{promptLabel}</div>
+          <div className="terminal__prompt__input">
+            <input
+              type="text"
+              value={input}
+              onKeyDown={handleInputKeyDown}
+              onChange={handleInputChange}
+              // @ts-ignore
+              ref={inputRef}
+            />
+            <div style={{ height: "50px" }}></div>
+          </div>
         </div>
       </div>
-    </div>
-  );
-});
+    );
+  }
+);
