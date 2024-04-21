@@ -11,18 +11,12 @@ import { TerminalProps } from "./types";
 
 export const Terminal = forwardRef(
   (props: TerminalProps, ref: ForwardedRef<HTMLDivElement>) => {
+    const { openTerminal } = props;
     const { history = [], promptLabel = ">", commands = {} } = props;
-
     const inputRef = useRef<HTMLInputElement>();
     const [input, setInputValue] = useState<string>("");
     const [commandsHistory, setCommandsHistory] = useState<string[]>([]);
     const [currentIndex, setCurrentIndex] = useState<number>(0);
-    const [newCommand, setNewCommand] = useState<string>("");
-
-    console.log("commandsHistory");
-    console.log(commandsHistory);
-    console.log("commandsHistory posizione 0");
-    console.log(commandsHistory[0]);
 
     useEffect(() => {
       inputRef.current?.focus();
@@ -62,9 +56,10 @@ export const Terminal = forwardRef(
       const handleKeyUp = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === "ArrowUp") {
           setCurrentIndex((prevIndex) => {
-            const newCurrentIndex = Math.min(prevIndex + 1, commandsHistory.length - 1);
-            //const newCurrentIndex = prevIndex + 1;
-            console.log("newCurrentIndex:", newCurrentIndex);
+            const newCurrentIndex = Math.min(
+              prevIndex + 1,
+              commandsHistory.length - 1
+            );
 
             const lastCommand = commandsHistory[newCurrentIndex];
             console.log(commandsHistory);
@@ -89,34 +84,6 @@ export const Terminal = forwardRef(
       return () => window.removeEventListener("keyup", handleKeyUp as any);
     }, [commandsHistory]);
 
-    /*
-    useEffect(() => {
-      const handleKeyUp = (event: React.KeyboardEvent<HTMLInputElement>) => {
-        if (event.key === "ArrowUp") {
-          setCurrentIndex((prevIndex) =>
-            Math.min(prevIndex + 1, commandsHistory.length - 1)
-          );
-        } else if (event.key === "ArrowDown") {
-          setCurrentIndex((prevIndex) => Math.max(prevIndex - 1, 0));
-        }
-      };
-
-      window.addEventListener("keyup", handleKeyUp as any);
-
-      return () => {
-        //window.removeEventListener("keyup", handleKeyUp as any);
-      };
-    }, [commandsHistory, currentIndex]);
-
-    useEffect(() => {
-      if (newCommand) {
-        setCommandsHistory((prevCommands) => [
-          ...prevCommands,
-          newCommand.toLowerCase(),
-        ]);
-      }
-    }, [newCommand]);
-*/
     return (
       <div className="terminal" ref={ref} onClick={focusInput}>
         {history.map((line, index) => (
@@ -127,20 +94,22 @@ export const Terminal = forwardRef(
             {line}
           </div>
         ))}
-        <div className="terminal__prompt">
-          <div className="terminal__prompt__label">{promptLabel}</div>
-          <div className="terminal__prompt__input">
-            <input
-              type="text"
-              value={input}
-              onKeyDown={handleInputKeyDown}
-              onChange={handleInputChange}
-              // @ts-ignore
-              ref={inputRef}
-            />
-            <div style={{ height: "50px" }}></div>
+        {openTerminal && (
+          <div className="terminal__prompt">
+            <div className="terminal__prompt__label">{promptLabel}</div>
+            <div className="terminal__prompt__input">
+              <input
+                type="text"
+                value={input}
+                onKeyDown={handleInputKeyDown}
+                onChange={handleInputChange}
+                // @ts-ignore
+                ref={inputRef}
+              />
+              <div style={{ height: "50px" }}></div>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     );
   }

@@ -12,6 +12,7 @@ export const useTerminal = () => {
     []
   );
   const [history, setHistory] = useState<TerminalHistory>([]);
+  const [openTerminal, setOpenTerminal] = useState(false);
 
   useEffect(() => {
     const windowResizeEvent = () => {
@@ -61,5 +62,7 @@ export const useTerminal = () => {
     setTerminalRef,
     resetTerminal,
     setHistory,
+    openTerminal,
+    setOpenTerminal
   };
 };
