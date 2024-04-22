@@ -94,3 +94,16 @@
   margin: 0;
   padding: 0;
 }
+
+.terminal__link{
+  color:aquamarine;
+}
+
+.terminal__close{
+  color:red
+}
+
+.terminal__text__row{
+  padding-top: 10px;
+  padding-bottom: 10px;
+}

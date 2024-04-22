@@ -11,7 +11,7 @@ import { TerminalProps } from "./types";
 
 export const Terminal = forwardRef(
   (props: TerminalProps, ref: ForwardedRef<HTMLDivElement>) => {
-    const { openTerminal } = props;
+    const { openTerminal, setOpenTerminal } = props;
     const { history = [], promptLabel = ">", commands = {} } = props;
     const inputRef = useRef<HTMLInputElement>();
     const [input, setInputValue] = useState<string>("");
@@ -40,7 +40,6 @@ export const Terminal = forwardRef(
           if (commandToExecute) {
             commandToExecute?.();
             setInputValue("");
-            //setNewCommand(input.toLowerCase());
             const newCommands = [...commandsHistory, input.toLowerCase()];
             console.log(newCommands);
             if (newCommands) {
@@ -62,9 +61,6 @@ export const Terminal = forwardRef(
             );
 
             const lastCommand = commandsHistory[newCurrentIndex];
-            console.log(commandsHistory);
-            console.log("lastCommand");
-            console.log(lastCommand);
             setInputValue(lastCommand || "");
             return newCurrentIndex;
           });

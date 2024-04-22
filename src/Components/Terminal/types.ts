@@ -16,4 +16,5 @@ export type TerminalProps = {
   promptLabel?: TerminalHistoryItem;
   commands: TerminalCommands;
   openTerminal: boolean;
+  setOpenTerminal: React.Dispatch<React.SetStateAction<boolean>>;
 };

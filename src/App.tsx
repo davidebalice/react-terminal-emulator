@@ -15,7 +15,7 @@ function App() {
     setOpenTerminal,
   } = useTerminal();
 
-  const commands = useCommands(pushToHistory, setHistory);
+  const commands = useCommands(pushToHistory, setHistory, setOpenTerminal);
 
   const description = (
     <>
@@ -29,7 +29,8 @@ function App() {
   const help = (
     <>
       <div>
-        Type <b style={{ color: "#fff" }}>help</b> to view list of commands
+        Type <b style={{ color: "#fff" }}>help</b> or <b>h</b> to view list of
+        commands
         <br />
         <br />
       </div>
@@ -70,6 +71,7 @@ function App() {
       <Terminal
         history={history}
         openTerminal={openTerminal}
+        setOpenTerminal={setOpenTerminal}
         ref={setTerminalRef}
         promptLabel={<>{`User>`}</>}
         commands={commands}
