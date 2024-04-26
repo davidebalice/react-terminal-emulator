@@ -17,4 +17,6 @@ export type TerminalProps = {
   commands: TerminalCommands;
   openTerminal: boolean;
   setOpenTerminal: React.Dispatch<React.SetStateAction<boolean>>;
+  openLogin: number;
+  setOpenLogin: React.Dispatch<React.SetStateAction<number>>;
 };

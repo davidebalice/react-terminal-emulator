@@ -13,6 +13,7 @@ export const useTerminal = () => {
   );
   const [history, setHistory] = useState<TerminalHistory>([]);
   const [openTerminal, setOpenTerminal] = useState(false);
+  const [openLogin, setOpenLogin] = useState(0);
 
   useEffect(() => {
     const windowResizeEvent = () => {
@@ -63,6 +64,8 @@ export const useTerminal = () => {
     resetTerminal,
     setHistory,
     openTerminal,
-    setOpenTerminal
+    setOpenTerminal,
+    openLogin,
+    setOpenLogin,
   };
 };

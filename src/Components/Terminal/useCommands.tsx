@@ -31,44 +31,55 @@ const useCommands = (
     };
   }, [setOpenTerminal]);
 
-  const commandlist = (
-    <>
-      <div className="terminal__row">
-        <p className="terminal__command">about</p>
-        <p className="terminal__command__text">some info about me</p>
-      </div>
-      <div className="terminal__row">
-        <p className="terminal__command">clear</p>
-        <p className="terminal__command__text">clear terminal history</p>
-      </div>
-      <div className="terminal__row">
-        <p className="terminal__command">close</p>
-        <p className="terminal__command__text">close terminal</p>
-      </div>
-      <div className="terminal__row">
-        <p className="terminal__command">email</p>
-        <p className="terminal__command__text">send an email to me</p>
-      </div>
-      <div className="terminal__row">
-        <p className="terminal__command">github</p>
-        <p className="terminal__command__text">show source of this project</p>
-      </div>
-      <div className="terminal__row">
-        <p className="terminal__command">site</p>
-        <p className="terminal__command__text">show my website</p>
-      </div>
-      <div className="terminal__row">
-        <p className="terminal__command">skills</p>
-        <p className="terminal__command__text">show my dev skills</p>
-      </div>
-      <div className="terminal__row">
-        <p className="terminal__command">ls</p>
-        <p className="terminal__command__text">
-          show real list of file of this project
-        </p>
-      </div>
-    </>
-  );
+  const commandlist = async () => {
+    pushToHistory(
+      <>
+        <span style={{ color: "orange" }}>
+          <strong>Command list</strong>
+        </span>
+        <div className="terminal__row">
+          <p className="terminal__command">about</p>
+          <p className="terminal__command__text">some info about me</p>
+        </div>
+        <div className="terminal__row">
+          <p className="terminal__command">clear</p>
+          <p className="terminal__command__text">clear terminal history</p>
+        </div>
+        <div className="terminal__row">
+          <p className="terminal__command">close</p>
+          <p className="terminal__command__text">close terminal</p>
+        </div>
+        <div className="terminal__row">
+          <p className="terminal__command">email</p>
+          <p className="terminal__command__text">send an email to me</p>
+        </div>
+        <div className="terminal__row">
+          <p className="terminal__command">github</p>
+          <p className="terminal__command__text">show source of this project</p>
+        </div>
+        <div className="terminal__row">
+          <p className="terminal__command">info</p>
+          <p className="terminal__command__text">
+            some info about this terminal
+          </p>
+        </div>
+        <div className="terminal__row">
+          <p className="terminal__command">site</p>
+          <p className="terminal__command__text">show my website</p>
+        </div>
+        <div className="terminal__row">
+          <p className="terminal__command">skills</p>
+          <p className="terminal__command__text">show my dev skills</p>
+        </div>
+        <div className="terminal__row">
+          <p className="terminal__command">ls</p>
+          <p className="terminal__command__text">
+            show real list of file of this project
+          </p>
+        </div>
+      </>
+    );
+  };
 
   const github = async () => {
     pushToHistory(
@@ -112,6 +123,23 @@ const useCommands = (
     );
   };
 
+  const info = async () => {
+    pushToHistory(
+      <>
+        <span style={{ color: "orange" }}>
+          <strong>Terminal info</strong>
+        </span>
+        <div className="terminal__text__row">
+         
+            This terminal is just an experiment, developed in React and TypeScript for study purpose.
+            <br />
+            Possible uses are interaction with files system, file creation, setting permissions, viewing information, generating passwords and more.
+          
+        </div>
+      </>
+    );
+  };
+
   const close = async () => {
     setHistory([]);
     setOpenTerminal(false);
@@ -121,7 +149,9 @@ const useCommands = (
         <div className="terminal__text__row">
           <span style={{ color: "#ff0000" }}>Terminal closed</span>
           <br />
-          <span style={{ color: "#ccc" }}>Press <b>F2</b> to restart terminal</span>
+          <span style={{ color: "#ccc" }}>
+            Press <b>F2</b> to restart terminal
+          </span>
         </div>
       </>
     );
@@ -167,12 +197,9 @@ const useCommands = (
 
   const commands = useMemo(
     () => ({
-      help: async () => {
-        await pushToHistory(<>{commandlist}</>);
-      },
-      h: async () => {
-        await pushToHistory(<>{commandlist}</>);
-      },
+      help: commandlist,
+      h: commandlist,
+      info: info,
       github: github,
       close: close,
       site: site,

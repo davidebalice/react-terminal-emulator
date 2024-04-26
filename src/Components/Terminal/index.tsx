@@ -6,12 +6,14 @@ import {
   useRef,
   useState,
 } from "react";
+import { Login } from "./Login";
 import "./terminal.css";
 import { TerminalProps } from "./types";
 
 export const Terminal = forwardRef(
   (props: TerminalProps, ref: ForwardedRef<HTMLDivElement>) => {
     const { openTerminal, setOpenTerminal } = props;
+    const { openLogin, setOpenLogin } = props;
     const { history = [], promptLabel = ">", commands = {} } = props;
     const inputRef = useRef<HTMLInputElement>();
     const [input, setInputValue] = useState<string>("");
@@ -68,8 +70,6 @@ export const Terminal = forwardRef(
           setCurrentIndex((prevIndex) => {
             const newCurrentIndex = Math.max(prevIndex - 1, 0);
             const lastCommand = commandsHistory[newCurrentIndex];
-            console.log("newCurrentIndex:", newCurrentIndex);
-            console.log(lastCommand);
             setInputValue(lastCommand || "");
             return newCurrentIndex;
           });
@@ -105,6 +105,9 @@ export const Terminal = forwardRef(
               <div style={{ height: "50px" }}></div>
             </div>
           </div>
+        )}
+        {(openLogin === 1 || openLogin === 2) && (
+          <Login openLogin={openLogin} setOpenLogin={setOpenLogin} />
         )}
       </div>
     );

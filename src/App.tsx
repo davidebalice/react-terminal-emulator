@@ -13,6 +13,8 @@ function App() {
     resetTerminal,
     openTerminal,
     setOpenTerminal,
+    openLogin,
+    setOpenLogin,
   } = useTerminal();
 
   const commands = useCommands(pushToHistory, setHistory, setOpenTerminal);
@@ -21,7 +23,7 @@ function App() {
     <>
       <div>
         <br />
-        DB Terminal emulator 0.8 developed in React, Typescript and Css
+        DB Terminal emulator 0.8 developed in React, TypeScript and Css
       </div>
     </>
   );
@@ -58,7 +60,8 @@ function App() {
         }, delayBetweenItems);
       } else {
         setTimeout(() => {
-          setOpenTerminal(true);
+          //setOpenTerminal(true);
+          setOpenLogin(1);
         }, delayBetweenItems);
       }
     };
@@ -72,6 +75,8 @@ function App() {
         history={history}
         openTerminal={openTerminal}
         setOpenTerminal={setOpenTerminal}
+        openLogin={openLogin}
+        setOpenLogin={setOpenLogin}
         ref={setTerminalRef}
         promptLabel={<>{`User>`}</>}
         commands={commands}
