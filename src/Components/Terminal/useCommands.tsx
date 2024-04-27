@@ -1,18 +1,15 @@
 import axios from "axios";
 import { useEffect, useMemo } from "react";
 import "./terminal.css";
+import { FileItem } from "./types";
 
 const useCommands = (
   pushToHistory: any,
   setHistory: any,
-  setOpenTerminal: any
+  setOpenTerminal: any,
+  commandsHistory: any
 ) => {
   const apiUrl: string = process.env.REACT_APP_FILE_API_URL || "";
-  interface FileItem {
-    name: string;
-    size: number;
-    type: "file" | "directory";
-  }
 
   interface ApiResponse {
     items: FileItem[];
@@ -30,6 +27,10 @@ const useCommands = (
       window.removeEventListener("keydown", handleKeyPress);
     };
   }, [setOpenTerminal]);
+
+  const getTokenFromLocalStorage = () => {
+    return localStorage.getItem("token");
+  };
 
   const commandlist = async () => {
     pushToHistory(
@@ -130,11 +131,12 @@ const useCommands = (
           <strong>Terminal info</strong>
         </span>
         <div className="terminal__text__row">
-         
-            This terminal is just an experiment, developed in React and TypeScript for study purpose.
-            <br />
-            Possible uses are interaction with files system, file creation, setting permissions, viewing information, generating passwords and more.
-          
+          This terminal is just an experiment, developed in React and TypeScript
+          for study purpose.
+          <br />
+          Possible uses are interaction with files system, file creation,
+          setting permissions, viewing information, generating passwords and
+          more.
         </div>
       </>
     );
@@ -158,41 +160,73 @@ const useCommands = (
   };
 
   const ls = async () => {
-    const response = await axios.get<ApiResponse>(apiUrl);
-    const fileList = response.data.items;
-    const fileListElements = fileList.map((item, index) => (
-      <div key={index} className="filesystem__row">
-        <p
-          className={
-            item.type === "directory"
-              ? "filesystem__row__directory"
-              : "filesystem__row__file"
-          }
-        >
-          {item.type === "directory" ? (
-            <strong>/{item.name}</strong>
-          ) : (
-            <strong>{item.name}</strong>
-          )}
-        </p>
-        {item.type === "directory" ? (
-          <p className="filesystem__row__directory">{`<dir>`}</p>
-        ) : (
-          <p className="filesystem__row__file">{item.size}kb</p>
-        )}
-      </div>
-    ));
+    const token = getTokenFromLocalStorage();
+    await axios
+      .get<ApiResponse>(apiUrl, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        console.log("Response:", response.data);
+        const fileList = response.data.items;
+        const fileListElements = fileList.map((item, index) => (
+          <div key={index} className="filesystem__row">
+            <p
+              className={
+                item.type === "directory"
+                  ? "filesystem__row__directory"
+                  : "filesystem__row__file"
+              }
+            >
+              {item.type === "directory" ? (
+                <strong>/{item.name}</strong>
+              ) : (
+                <strong>{item.name}</strong>
+              )}
+            </p>
+            {item.type === "directory" ? (
+              <p className="filesystem__row__directory">{`<dir>`}</p>
+            ) : (
+              <p className="filesystem__row__file">{item.size}kb</p>
+            )}
+          </div>
+        ));
 
-    await pushToHistory(
+        pushToHistory(
+          <>
+            <div>
+              <span style={{ color: "orange" }}>
+                <strong>Project filesystem</strong>
+              </span>
+              {fileListElements}
+            </div>
+          </>
+        );
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  };
+
+  const cd = async () => {
+    const command =  localStorage.getItem("command");
+    //commandsHistory
+    /*
+    console.log("commandsHistory");
+    if (commandsHistory) {
+      console.log(commandsHistory);
+    }
+*/
+    pushToHistory(
       <>
-        <div>
-          <span style={{ color: "orange" }}>
-            <strong>Project filesystem</strong>
-          </span>
-          {fileListElements}
-        </div>
+        <span style={{ color: "orange" }}>
+          <strong>.....</strong>
+        </span>
+        <div className="terminal__text__row">command:{command}</div>
       </>
     );
+    
   };
 
   const commands = useMemo(
@@ -206,8 +240,9 @@ const useCommands = (
       ls: ls,
       dir: ls,
       clear: clear,
+      cd: cd,
     }),
-    [pushToHistory]
+    [pushToHistory, commandsHistory]
   );
 
   return commands;

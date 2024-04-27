@@ -13,6 +13,7 @@ export const useTerminal = () => {
   );
   const [history, setHistory] = useState<TerminalHistory>([]);
   const [openTerminal, setOpenTerminal] = useState(false);
+  const [username, setUsername] = useState("User");
   const [openLogin, setOpenLogin] = useState(0);
 
   useEffect(() => {
@@ -67,5 +68,7 @@ export const useTerminal = () => {
     setOpenTerminal,
     openLogin,
     setOpenLogin,
+    username,
+    setUsername,
   };
 };

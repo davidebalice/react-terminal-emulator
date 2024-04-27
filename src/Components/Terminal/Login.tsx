@@ -1,21 +1,19 @@
 import axios from "axios";
 import { useCallback, useEffect, useRef, useState } from "react";
 import "./terminal.css";
-
-interface LoginProps {
-  openLogin: number;
-  setOpenLogin: React.Dispatch<React.SetStateAction<number>>;
-}
+import { LoginProps } from "./types";
 
 export const Login = (props: LoginProps) => {
   const apiUrl: string = process.env.REACT_APP_LOGIN_API_URL || "";
   const inputRef = useRef<HTMLInputElement>(null);
-  const [formData, setFormData] = useState({ username: "", password: "" });
+  const [formData, setFormData] = useState({ email: "", password: "" });
   const { openLogin, setOpenLogin } = props;
+  const { openTerminal, setOpenTerminal } = props;
+  const { username, setUsername } = props;
   useEffect(() => {
     inputRef.current?.focus();
   });
-
+  const [error, setError] = useState(false);
   const focusInput = useCallback(() => {
     inputRef.current?.focus();
   }, []);
@@ -35,25 +33,38 @@ export const Login = (props: LoginProps) => {
   };
 
   const handleSubmit = () => {
-    console.log("Valore Username:", formData.username);
-    console.log("Valore Password:", formData.password);
     if (openLogin === 1) {
-      if (formData.username !== "") {
+      if (formData.email !== "") {
         setOpenLogin(2);
       }
     } else if (openLogin === 2) {
       if (formData.password !== "") {
-        //REACT_APP_LOGIN_API_URL
         axios
           .post(apiUrl, {
-            username: formData.username,
+            email: formData.email,
             password: formData.password,
           })
           .then((response) => {
             console.log("Response:", response.data);
+            if (response.data.status === "success") {
+              localStorage.setItem("token", response.data.token);
+              setOpenLogin(0);
+              setOpenTerminal(true);
+              setError(false);
+              setUsername(response.data.user.username);
+            } else {
+              localStorage.setItem("token", "");
+              setOpenLogin(1);
+              setOpenTerminal(false);
+              setError(true);
+              setFormData({ email: "", password: "" });
+            }
           })
           .catch((error) => {
             console.error("Error:", error);
+            setOpenLogin(1);
+            setError(true);
+            setFormData({ email: "", password: "" });
           });
       }
     }
@@ -81,18 +92,35 @@ export const Login = (props: LoginProps) => {
   return (
     <div>
       <span style={{ color: "orange" }}>
-        <strong>Login</strong>
+        <strong>Terminal login</strong>
       </span>
+      <div style={{ height: "10px" }}></div>
+      <span style={{ color: "#c4c4c4" }}>
+        use this data to access
+        <br />
+        email: mario@rossi.it
+        <br />
+        password: 12345678
+        <br />
+      </span>
+      {error && (
+        <>
+          <br />
+          <br />
+          <b style={{ color: "red" }}>Login error, data are incorrect</b>
+        </>
+      )}
+
       <div className="terminal__prompt">
         {openLogin === 1 ? (
           <>
-            <div className="terminal__prompt__label">username:</div>
+            <div className="terminal__prompt__label">email:</div>
             <div className="terminal__prompt__input">
               <input
                 type="text"
-                name="username"
+                name="email"
                 ref={inputRef}
-                value={formData.username}
+                value={formData.email}
                 onChange={handleInputChange}
                 onKeyDown={handleKeyDown}
               />

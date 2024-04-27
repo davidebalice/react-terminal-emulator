@@ -17,6 +17,25 @@ export type TerminalProps = {
   commands: TerminalCommands;
   openTerminal: boolean;
   setOpenTerminal: React.Dispatch<React.SetStateAction<boolean>>;
+  commandsHistory: string[];
+  setCommandsHistory: React.Dispatch<React.SetStateAction<string[]>>;
   openLogin: number;
   setOpenLogin: React.Dispatch<React.SetStateAction<number>>;
+  username: string;
+  setUsername: React.Dispatch<React.SetStateAction<string>>;
+};
+
+export type LoginProps = {
+  openLogin: number;
+  setOpenLogin: React.Dispatch<React.SetStateAction<number>>;
+  openTerminal: boolean;
+  setOpenTerminal: React.Dispatch<React.SetStateAction<boolean>>;
+  username: string;
+  setUsername: React.Dispatch<React.SetStateAction<string>>;
+};
+
+export type FileItem = {
+  name: string;
+  size: number;
+  type: "file" | "directory";
 };

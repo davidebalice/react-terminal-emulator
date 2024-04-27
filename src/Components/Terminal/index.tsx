@@ -12,12 +12,13 @@ import { TerminalProps } from "./types";
 
 export const Terminal = forwardRef(
   (props: TerminalProps, ref: ForwardedRef<HTMLDivElement>) => {
+    const { username, setUsername } = props;
     const { openTerminal, setOpenTerminal } = props;
+    const { commandsHistory, setCommandsHistory } = props;
     const { openLogin, setOpenLogin } = props;
-    const { history = [], promptLabel = ">", commands = {} } = props;
+    const { history = [], commands = {} } = props;
     const inputRef = useRef<HTMLInputElement>();
     const [input, setInputValue] = useState<string>("");
-    const [commandsHistory, setCommandsHistory] = useState<string[]>([]);
     const [currentIndex, setCurrentIndex] = useState<number>(0);
 
     useEffect(() => {
@@ -38,11 +39,24 @@ export const Terminal = forwardRef(
     const handleInputKeyDown = useCallback(
       (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter") {
-          const commandToExecute = commands?.[input.toLowerCase()];
+          const inputCommand = input.toLowerCase().trim();
+          const commandParts = inputCommand.split(" ");
+
+          const commandName = commandParts[0];
+          const commandArgs = commandParts.slice(1);
+          const commandToExecute = commands?.[commandName];
+          if (
+            (commandName === "cd" || commandName === "page") &&
+            commandArgs[0].length >= 2
+          ) {
+            localStorage.setItem("command", commandArgs[0]);
+          }
+
           if (commandToExecute) {
-            commandToExecute?.();
+            commandToExecute();
+
             setInputValue("");
-            const newCommands = [...commandsHistory, input.toLowerCase()];
+            const newCommands = [...commandsHistory, inputCommand];
             console.log(newCommands);
             if (newCommands) {
               setCommandsHistory(newCommands);
@@ -50,7 +64,7 @@ export const Terminal = forwardRef(
           }
         }
       },
-      [commands, input]
+      [commands, input, commandsHistory, setCommandsHistory, setInputValue]
     );
 
     useEffect(() => {
@@ -92,7 +106,7 @@ export const Terminal = forwardRef(
         ))}
         {openTerminal && (
           <div className="terminal__prompt">
-            <div className="terminal__prompt__label">{promptLabel}</div>
+            <div className="terminal__prompt__label">{username + `>`}</div>
             <div className="terminal__prompt__input">
               <input
                 type="text"
@@ -107,7 +121,14 @@ export const Terminal = forwardRef(
           </div>
         )}
         {(openLogin === 1 || openLogin === 2) && (
-          <Login openLogin={openLogin} setOpenLogin={setOpenLogin} />
+          <Login
+            openTerminal={openTerminal}
+            setOpenTerminal={setOpenTerminal}
+            openLogin={openLogin}
+            setOpenLogin={setOpenLogin}
+            username={username}
+            setUsername={setUsername}
+          />
         )}
       </div>
     );

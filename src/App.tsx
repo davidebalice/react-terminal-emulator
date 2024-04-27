@@ -1,10 +1,12 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Terminal } from "./Components/Terminal";
 import { logo } from "./Components/Terminal/logo";
 import useCommands from "./Components/Terminal/useCommands";
 import { useTerminal } from "./Components/Terminal/useTerminal";
 
 function App() {
+  const [commandsHistory, setCommandsHistory] = useState<string[]>([]);
+
   const {
     history,
     pushToHistory,
@@ -15,9 +17,16 @@ function App() {
     setOpenTerminal,
     openLogin,
     setOpenLogin,
+    username,
+    setUsername,
   } = useTerminal();
 
-  const commands = useCommands(pushToHistory, setHistory, setOpenTerminal);
+  const commands = useCommands(
+    pushToHistory,
+    setHistory,
+    setOpenTerminal,
+    commandsHistory
+  );
 
   const description = (
     <>
@@ -77,9 +86,12 @@ function App() {
         setOpenTerminal={setOpenTerminal}
         openLogin={openLogin}
         setOpenLogin={setOpenLogin}
+        username={username}
+        setUsername={setUsername}
         ref={setTerminalRef}
-        promptLabel={<>{`User>`}</>}
         commands={commands}
+        commandsHistory={commandsHistory}
+        setCommandsHistory={setCommandsHistory}
       />
     </>
   );
