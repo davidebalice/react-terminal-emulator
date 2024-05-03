@@ -6,7 +6,7 @@ import { LoginProps } from "./types";
 export const Login = (props: LoginProps) => {
   const apiUrl: string = process.env.REACT_APP_LOGIN_API_URL || "";
   const inputRef = useRef<HTMLInputElement>(null);
-  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [formData, setFormData] = useState({ email: "mario@rossi.it", password: "12345678" });
   const { openLogin, setOpenLogin } = props;
   const { openTerminal, setOpenTerminal } = props;
   const { username, setUsername } = props;

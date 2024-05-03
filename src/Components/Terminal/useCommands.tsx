@@ -1,5 +1,6 @@
 import axios from "axios";
-import { useEffect, useMemo } from "react";
+import { useContext, useEffect, useMemo } from "react";
+import { Context } from "../../context/DataContext";
 import "./terminal.css";
 import { FileItem } from "./types";
 
@@ -9,8 +10,9 @@ const useCommands = (
   setOpenTerminal: any,
   commandsHistory: any
 ) => {
-  const apiUrl: string = process.env.REACT_APP_FILE_API_URL || "";
-
+  const apiUrlFile: string = process.env.REACT_APP_FILE_API_URL || "";
+  const apiUrlDirectory: string = process.env.REACT_APP_CHECKDIR_URL || "";
+  const { setDirectory, command, triggerUpdate } = useContext(Context);
   interface ApiResponse {
     items: FileItem[];
   }
@@ -162,7 +164,7 @@ const useCommands = (
   const ls = async () => {
     const token = getTokenFromLocalStorage();
     await axios
-      .get<ApiResponse>(apiUrl, {
+      .get<ApiResponse>(apiUrlFile, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -210,24 +212,106 @@ const useCommands = (
   };
 
   const cd = async () => {
-    const command =  localStorage.getItem("command");
-    //commandsHistory
-    /*
-    console.log("commandsHistory");
-    if (commandsHistory) {
-      console.log(commandsHistory);
+    const token = getTokenFromLocalStorage();
+
+    triggerUpdate();
+
+    //const currentCommand = command.toLowerCase().trim();
+    let currentCommand: any = "";
+    let directory = localStorage.getItem("directory");
+    if (directory === "") {
+      currentCommand = localStorage.getItem("command");
+    } else {
+      currentCommand = directory + `\\` + localStorage.getItem("command");
     }
-*/
-    pushToHistory(
-      <>
-        <span style={{ color: "orange" }}>
-          <strong>.....</strong>
-        </span>
-        <div className="terminal__text__row">command:{command}</div>
-      </>
-    );
-    
+    await axios
+      .get(apiUrlDirectory, {
+        params: { dir: currentCommand },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        console.log("Response:", response.data);
+        console.log(response.data.exists);
+        if (response.data.exists === true) {
+          console.log("entrato");
+          console.log(response.data.exists);
+          console.log(directory);
+
+          setDirectory(currentCommand);
+          localStorage.setItem("directory", currentCommand);
+        } else {
+          pushToHistory(
+            <>
+              <div>
+                <span style={{ color: "red" }}>
+                  <strong>Directory not found</strong>
+                </span>
+              </div>
+            </>
+          );
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   };
+
+  /*
+  
+  const cd = async () => {
+    const token = getTokenFromLocalStorage();
+    const directory = localStorage.getItem("directory");
+    await axios
+      .get<ApiResponse>(apiUrl, {
+        params: { directory: directory },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        console.log("Response:", response.data);
+        const fileList = response.data.items;
+        const fileListElements = fileList.map((item, index) => (
+          <div key={index} className="filesystem__row">
+            <p
+              className={
+                item.type === "directory"
+                  ? "filesystem__row__directory"
+                  : "filesystem__row__file"
+              }
+            >
+              {item.type === "directory" ? (
+                <strong>/{item.name}</strong>
+              ) : (
+                <strong>{item.name}</strong>
+              )}
+            </p>
+            {item.type === "directory" ? (
+              <p className="filesystem__row__directory">{`<dir>`}</p>
+            ) : (
+              <p className="filesystem__row__file">{item.size}kb</p>
+            )}
+          </div>
+        ));
+
+        pushToHistory(
+          <>
+            <div>
+              <span style={{ color: "orange" }}>
+                <strong>Project filesystem</strong>
+              </span>
+              {fileListElements}
+            </div>
+          </>
+        );
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  };
+  */
 
   const commands = useMemo(
     () => ({

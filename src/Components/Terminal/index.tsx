@@ -2,10 +2,12 @@ import {
   ForwardedRef,
   forwardRef,
   useCallback,
+  useContext,
   useEffect,
   useRef,
   useState,
 } from "react";
+import { Context } from "../../context/DataContext";
 import { Login } from "./Login";
 import "./terminal.css";
 import { TerminalProps } from "./types";
@@ -20,6 +22,8 @@ export const Terminal = forwardRef(
     const inputRef = useRef<HTMLInputElement>();
     const [input, setInputValue] = useState<string>("");
     const [currentIndex, setCurrentIndex] = useState<number>(0);
+    const { directory, command, setCommand } =
+      useContext(Context);
 
     useEffect(() => {
       inputRef.current?.focus();
@@ -37,18 +41,20 @@ export const Terminal = forwardRef(
     );
 
     const handleInputKeyDown = useCallback(
-      (e: React.KeyboardEvent<HTMLInputElement>) => {
+      async (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter") {
           const inputCommand = input.toLowerCase().trim();
           const commandParts = inputCommand.split(" ");
 
           const commandName = commandParts[0];
           const commandArgs = commandParts.slice(1);
+          if (commandArgs[0] !== "" && commandArgs[0] !== undefined) {
+            commandArgs[0] = commandArgs[0].replace("/", "").replace("\\", "");
+          }
+
           const commandToExecute = commands?.[commandName];
-          if (
-            (commandName === "cd" || commandName === "page") &&
-            commandArgs[0].length >= 2
-          ) {
+          if (commandName === "cd" && commandArgs[0].length >= 2) {
+            setCommand(commandArgs[0]);
             localStorage.setItem("command", commandArgs[0]);
           }
 
@@ -64,7 +70,7 @@ export const Terminal = forwardRef(
           }
         }
       },
-      [commands, input, commandsHistory, setCommandsHistory, setInputValue]
+      [input, commands, setCommand, commandsHistory, setCommandsHistory]
     );
 
     useEffect(() => {
@@ -96,6 +102,7 @@ export const Terminal = forwardRef(
 
     return (
       <div className="terminal" ref={ref} onClick={focusInput}>
+        command:{command}
         {history.map((line, index) => (
           <div
             className="terminal__line"
@@ -107,6 +114,13 @@ export const Terminal = forwardRef(
         {openTerminal && (
           <div className="terminal__prompt">
             <div className="terminal__prompt__label">{username + `>`}</div>
+            <div className="terminal__prompt__directory">root\</div>
+            {directory !== "" && directory != null && (
+              <div className="terminal__prompt__directory">
+                {directory + `\\`}
+              </div>
+            )}
+
             <div className="terminal__prompt__input">
               <input
                 type="text"

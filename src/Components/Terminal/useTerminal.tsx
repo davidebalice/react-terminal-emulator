@@ -16,6 +16,7 @@ export const useTerminal = () => {
   const [username, setUsername] = useState("User");
   const [openLogin, setOpenLogin] = useState(0);
 
+
   useEffect(() => {
     const windowResizeEvent = () => {
       terminalRef?.scrollTo({

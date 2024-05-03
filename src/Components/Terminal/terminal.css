@@ -27,6 +27,11 @@
   color: #f9ef00;
 }
 
+.terminal__prompt__directory{
+  flex: 0 0 auto;
+  color: #cacaca;
+}
+
 .terminal__prompt__input {
   flex: 1;
   margin-left: 1rem;
