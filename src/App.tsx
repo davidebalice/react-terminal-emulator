@@ -29,56 +29,6 @@ function App() {
     commandsHistory
   );
 
-  const description = (
-    <>
-      <div>
-        <br />
-        DB Terminal emulator 0.8 developed in React, TypeScript and Css
-      </div>
-    </>
-  );
-
-  const help = (
-    <>
-      <div>
-        Type <b style={{ color: "#fff" }}>help</b> or <b>h</b> to view list of
-        commands
-        <br />
-        <br />
-      </div>
-    </>
-  );
-
-  useEffect(() => {
-    resetTerminal();
-
-    const itemsToSend = [
-      "Starting server",
-      "Please wait",
-      logo,
-      description,
-      help,
-    ];
-
-    const delayBetweenItems = 1000;
-
-    const pushToHistoryWithDelay = (items: any, index: number) => {
-      if (index < items.length) {
-        setTimeout(() => {
-          pushToHistory(items[index]);
-          pushToHistoryWithDelay(items, index + 1);
-        }, delayBetweenItems);
-      } else {
-        setTimeout(() => {
-          //setOpenTerminal(true);
-          setOpenLogin(1);
-        }, delayBetweenItems);
-      }
-    };
-
-    pushToHistoryWithDelay(itemsToSend, 0);
-  }, []);
-
   return (
     <>
       <h1 style={{ color: "white" }}>

@@ -9,6 +9,8 @@ import {
 } from "react";
 import { Context } from "../../context/DataContext";
 import { Login } from "./Login";
+import TextAnimation from "./TextAnimation";
+import { logoText } from "./logo";
 import "./terminal.css";
 import { TerminalProps } from "./types";
 
@@ -22,8 +24,8 @@ export const Terminal = forwardRef(
     const inputRef = useRef<HTMLInputElement>();
     const [input, setInputValue] = useState<string>("");
     const [currentIndex, setCurrentIndex] = useState<number>(0);
-    const { directory, command, setCommand } =
-      useContext(Context);
+    const { directory, command, setCommand } = useContext(Context);
+    const [animationFinished, setAnimationFinished] = useState<boolean>(false);
 
     useEffect(() => {
       inputRef.current?.focus();
@@ -100,8 +102,23 @@ export const Terminal = forwardRef(
       return () => window.removeEventListener("keyup", handleKeyUp as any);
     }, [commandsHistory]);
 
+    const handleAnimationFinish = () => {
+      console.log("Animazione finita");
+      setAnimationFinished(true);
+    };
+
+    useEffect(() => {
+      if (animationFinished) {
+        setOpenLogin(1);
+      }
+    }, [animationFinished]);
+
     return (
       <div className="terminal" ref={ref} onClick={focusInput}>
+        <TextAnimation
+          texts={logoText}
+          onFinishAnimation={handleAnimationFinish}
+        />
         command:{command}
         {history.map((line, index) => (
           <div
@@ -112,27 +129,34 @@ export const Terminal = forwardRef(
           </div>
         ))}
         {openTerminal && (
-          <div className="terminal__prompt">
-            <div className="terminal__prompt__label">{username + `>`}</div>
-            <div className="terminal__prompt__directory">root\</div>
-            {directory !== "" && directory != null && (
-              <div className="terminal__prompt__directory">
-                {directory + `\\`}
-              </div>
-            )}
-
-            <div className="terminal__prompt__input">
-              <input
-                type="text"
-                value={input}
-                onKeyDown={handleInputKeyDown}
-                onChange={handleInputChange}
-                // @ts-ignore
-                ref={inputRef}
-              />
-              <div style={{ height: "50px" }}></div>
+          <>
+            <div>
+              Type <b style={{ color: "#fff" }}>help</b> or{" "}
+              <b style={{ color: "#fff" }}>h</b> to view list of commands
+              <br />
             </div>
-          </div>
+            <div className="terminal__prompt">
+              <div className="terminal__prompt__label">{username + `>`}</div>
+              <div className="terminal__prompt__directory">root\</div>
+              {directory !== "" && directory != null && (
+                <div className="terminal__prompt__directory">
+                  {directory + `\\`}
+                </div>
+              )}
+
+              <div className="terminal__prompt__input">
+                <input
+                  type="text"
+                  value={input}
+                  onKeyDown={handleInputKeyDown}
+                  onChange={handleInputChange}
+                  // @ts-ignore
+                  ref={inputRef}
+                />
+                <div style={{ height: "50px" }}></div>
+              </div>
+            </div>
+          </>
         )}
         {(openLogin === 1 || openLogin === 2) && (
           <Login

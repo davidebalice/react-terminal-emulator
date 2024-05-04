@@ -27,7 +27,7 @@
   color: #f9ef00;
 }
 
-.terminal__prompt__directory{
+.terminal__prompt__directory {
   flex: 0 0 auto;
   color: #cacaca;
 }
@@ -49,6 +49,15 @@
   outline: none;
   font-size: 14px;
   line-height: 1.42;
+  font-family: "IBM Plex Mono", Consolas, Menlo, Monaco, "Courier New", Courier,
+    monospace;
+}
+
+.terminal__line__animation {
+  line-height: 1.1;
+  font-size: 14px;
+  white-space: pre-wrap;
+  color: #cacaca;
   font-family: "IBM Plex Mono", Consolas, Menlo, Monaco, "Courier New", Courier,
     monospace;
 }
@@ -95,20 +104,20 @@
   width: 200px;
   text-overflow: ellipsis;
   white-space: nowrap;
-  overflow: hidden; 
+  overflow: hidden;
   margin: 0;
   padding: 0;
 }
 
-.terminal__link{
-  color:aquamarine;
+.terminal__link {
+  color: aquamarine;
 }
 
-.terminal__close{
-  color:red
+.terminal__close {
+  color: red;
 }
 
-.terminal__text__row{
+.terminal__text__row {
   padding-top: 10px;
   padding-bottom: 10px;
 }

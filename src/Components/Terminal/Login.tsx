@@ -96,11 +96,7 @@ export const Login = (props: LoginProps) => {
       </span>
       <div style={{ height: "10px" }}></div>
       <span style={{ color: "#c4c4c4" }}>
-        use this data to access
-        <br />
-        email: mario@rossi.it
-        <br />
-        password: 12345678
+        use this data to access. Email: mario@rossi.it - Password: 12345678
         <br />
       </span>
       {error && (
