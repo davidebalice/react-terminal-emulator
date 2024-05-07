@@ -103,7 +103,6 @@ export const Terminal = forwardRef(
     }, [commandsHistory]);
 
     const handleAnimationFinish = () => {
-      console.log("Animazione finita");
       setAnimationFinished(true);
     };
 
@@ -119,32 +118,23 @@ export const Terminal = forwardRef(
           texts={logoText}
           onFinishAnimation={handleAnimationFinish}
         />
-        command:{command}
         {history.map((line, index) => (
-          <div
-            className="terminal__line"
-            key={`terminal-line-${index}-${line}`}
-          >
+          <div className="terminalLine" key={`terminal-line-${index}-${line}`}>
             {line}
           </div>
         ))}
         {openTerminal && (
           <>
-            <div>
-              Type <b style={{ color: "#fff" }}>help</b> or{" "}
-              <b style={{ color: "#fff" }}>h</b> to view list of commands
-              <br />
-            </div>
-            <div className="terminal__prompt">
-              <div className="terminal__prompt__label">{username + `>`}</div>
-              <div className="terminal__prompt__directory">root\</div>
+            <div className="terminalPrompt">
+              <div className="terminalPromptLabel">{username + `>`}</div>
+              <div className="terminalPromptRoot">root/</div>
               {directory !== "" && directory != null && (
-                <div className="terminal__prompt__directory">
-                  {directory + `\\`}
+                <div className="terminalPromptDirectory">
+                  {directory + `/`}
                 </div>
               )}
 
-              <div className="terminal__prompt__input">
+              <div className="terminalPromptInput">
                 <input
                   type="text"
                   value={input}

@@ -39,5 +39,7 @@ export const logoText = [
   " ",
   "DB Terminal emulator 0.8 developed in React, TypeScript and Css",
   " ",
+  "Type help or h to view list of commands",
+  " ",
   " ",
 ];

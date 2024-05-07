@@ -31,12 +31,6 @@ function App() {
 
   return (
     <>
-      <h1 style={{ color: "white" }}>
-        dir: {directory}
-        <br />
-        command: {command}
-        <br />
-      </h1>
       <Terminal
         history={history}
         openTerminal={openTerminal}

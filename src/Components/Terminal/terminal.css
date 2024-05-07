@@ -12,27 +12,33 @@
   position: relative;
 }
 
-.terminal__line {
+.terminalLine {
   line-height: 2;
   white-space: pre-wrap;
 }
 
-.terminal__prompt {
+.terminalPrompt {
   display: flex;
   align-items: center;
 }
 
-.terminal__prompt__label {
+.terminalPromptLabel {
   flex: 0 0 auto;
   color: #f9ef00;
 }
 
-.terminal__prompt__directory {
+.terminalOromptDirectory {
   flex: 0 0 auto;
   color: #cacaca;
 }
 
-.terminal__prompt__input {
+.terminalPromptRoot {
+  flex: 0 0 auto;
+  color: #cacaca;
+  margin-left:6px
+}
+
+.terminalPromptInput {
   flex: 1;
   margin-left: 1rem;
   display: flex;
@@ -40,7 +46,7 @@
   color: white;
 }
 
-.terminal__prompt__input input {
+.terminalPromptInput input {
   flex: 1;
   width: 100%;
   background-color: transparent;
@@ -53,7 +59,7 @@
     monospace;
 }
 
-.terminal__line__animation {
+.terminalLineAnimation {
   line-height: 1.1;
   font-size: 14px;
   white-space: pre-wrap;
@@ -62,7 +68,7 @@
     monospace;
 }
 
-.terminal__row {
+.terminalRow {
   display: flex;
   clear: both;
   margin: 0;
@@ -70,7 +76,7 @@
   height: 30px;
 }
 
-.terminal__command {
+.terminalCommand {
   display: flex;
   clear: both;
   margin: 0;
@@ -80,27 +86,27 @@
   color: #fff;
 }
 
-.terminal__command__text {
+.terminalCommandText {
   display: flex;
   margin: 0;
   padding: 0;
   clear: both;
 }
 
-.filesystem__row {
+.filesystemRow {
   display: flex;
   margin: 0;
   padding: 0;
   clear: both;
 }
 
-.filesystem__row__directory {
+.filesystemRowDirectory {
   width: 200px;
   margin: 0;
   padding: 0;
 }
 
-.filesystem__row__file {
+.filesystemRowFile {
   width: 200px;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -109,15 +115,15 @@
   padding: 0;
 }
 
-.terminal__link {
+.terminalLink {
   color: aquamarine;
 }
 
-.terminal__close {
+.terminalClose {
   color: red;
 }
 
-.terminal__text__row {
+.terminalTextRow {
   padding-top: 10px;
   padding-bottom: 10px;
 }

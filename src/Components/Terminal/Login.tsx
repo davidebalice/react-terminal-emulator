@@ -107,11 +107,11 @@ export const Login = (props: LoginProps) => {
         </>
       )}
 
-      <div className="terminal__prompt">
+      <div className="terminalPrompt">
         {openLogin === 1 ? (
           <>
-            <div className="terminal__prompt__label">email:</div>
-            <div className="terminal__prompt__input">
+            <div className="terminalPromptLabel">email:</div>
+            <div className="terminalPromptInput">
               <input
                 type="text"
                 name="email"
@@ -125,8 +125,8 @@ export const Login = (props: LoginProps) => {
           </>
         ) : (
           <>
-            <div className="terminal__prompt__label">password:</div>
-            <div className="terminal__prompt__input">
+            <div className="terminalPromptLabel">password:</div>
+            <div className="terminalPromptInput">
               <input
                 type="password"
                 name="password"

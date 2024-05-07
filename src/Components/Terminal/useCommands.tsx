@@ -40,45 +40,57 @@ const useCommands = (
         <span style={{ color: "orange" }}>
           <strong>Command list</strong>
         </span>
-        <div className="terminal__row">
-          <p className="terminal__command">about</p>
-          <p className="terminal__command__text">some info about me</p>
+        <div className="terminalRow">
+          <p className="terminalCommand">about</p>
+          <p className="terminalCommandText">some info about me</p>
         </div>
-        <div className="terminal__row">
-          <p className="terminal__command">clear</p>
-          <p className="terminal__command__text">clear terminal history</p>
+        <div className="terminalRow">
+          <p className="terminalCommand">cd [directory]</p>
+          <p className="terminalCommandText">navigate to directory</p>
         </div>
-        <div className="terminal__row">
-          <p className="terminal__command">close</p>
-          <p className="terminal__command__text">close terminal</p>
-        </div>
-        <div className="terminal__row">
-          <p className="terminal__command">email</p>
-          <p className="terminal__command__text">send an email to me</p>
-        </div>
-        <div className="terminal__row">
-          <p className="terminal__command">github</p>
-          <p className="terminal__command__text">show source of this project</p>
-        </div>
-        <div className="terminal__row">
-          <p className="terminal__command">info</p>
-          <p className="terminal__command__text">
-            some info about this terminal
+        <div className="terminalRow">
+          <p className="terminalCommand">cd.</p>
+          <p className="terminalCommandText">
+            navigate to root directory level
           </p>
         </div>
-        <div className="terminal__row">
-          <p className="terminal__command">site</p>
-          <p className="terminal__command__text">show my website</p>
+        <div className="terminalRow">
+          <p className="terminalCommand">cd..</p>
+          <p className="terminalCommandText">navigate up one directory level</p>
         </div>
-        <div className="terminal__row">
-          <p className="terminal__command">skills</p>
-          <p className="terminal__command__text">show my dev skills</p>
+        <div className="terminalRow">
+          <p className="terminalCommand">clear</p>
+          <p className="terminalCommandText">clear terminal history</p>
         </div>
-        <div className="terminal__row">
-          <p className="terminal__command">ls</p>
-          <p className="terminal__command__text">
+        <div className="terminalRow">
+          <p className="terminalCommand">close</p>
+          <p className="terminalCommandText">close terminal</p>
+        </div>
+        <div className="terminalRow">
+          <p className="terminalCommand">email</p>
+          <p className="terminalCommandText">send an email to me</p>
+        </div>
+        <div className="terminalRow">
+          <p className="terminalCommand">github</p>
+          <p className="terminalCommandText">show source of this project</p>
+        </div>
+        <div className="terminalRow">
+          <p className="terminalCommand">info</p>
+          <p className="terminalCommandText">some info about this terminal</p>
+        </div>
+        <div className="terminalRow">
+          <p className="terminalCommand">ls</p>
+          <p className="terminalCommandText">
             show real list of file of this project
           </p>
+        </div>
+        <div className="terminalRow">
+          <p className="terminalCommand">site</p>
+          <p className="terminalCommandText">show my website</p>
+        </div>
+        <div className="terminalRow">
+          <p className="terminalCommand">skills</p>
+          <p className="terminalCommandText">show my dev skills</p>
         </div>
       </>
     );
@@ -87,13 +99,13 @@ const useCommands = (
   const github = async () => {
     pushToHistory(
       <>
-        <div className="terminal__row">
+        <div className="terminalRow">
           <a
             href="https://github.com/davidebalice"
             target="_blank"
             title="github db"
             rel="noreferrer"
-            className="terminal__link"
+            className="terminalLink"
           >
             https://github.com/davidebalice
           </a>
@@ -111,13 +123,13 @@ const useCommands = (
   const site = async () => {
     pushToHistory(
       <>
-        <div className="terminal__text__row">
+        <div className="terminalTextRow">
           <a
             href="https://www.davidebalice.dev"
             target="_blank"
             title="davidebalice.dev"
             rel="noreferrer"
-            className="terminal__link"
+            className="terminalLink"
           >
             https://www.davidebalice.dev
           </a>
@@ -132,7 +144,7 @@ const useCommands = (
         <span style={{ color: "orange" }}>
           <strong>Terminal info</strong>
         </span>
-        <div className="terminal__text__row">
+        <div className="terminalTextRow">
           This terminal is just an experiment, developed in React and TypeScript
           for study purpose.
           <br />
@@ -150,7 +162,7 @@ const useCommands = (
 
     pushToHistory(
       <>
-        <div className="terminal__text__row">
+        <div className="terminalTextRow">
           <span style={{ color: "#ff0000" }}>Terminal closed</span>
           <br />
           <span style={{ color: "#ccc" }}>
@@ -163,8 +175,10 @@ const useCommands = (
 
   const ls = async () => {
     const token = getTokenFromLocalStorage();
+    let directory = localStorage.getItem("directory");
     await axios
       .get<ApiResponse>(apiUrlFile, {
+        params: { dir: directory },
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -173,12 +187,12 @@ const useCommands = (
         console.log("Response:", response.data);
         const fileList = response.data.items;
         const fileListElements = fileList.map((item, index) => (
-          <div key={index} className="filesystem__row">
+          <div key={index} className="filesystemRow">
             <p
               className={
                 item.type === "directory"
-                  ? "filesystem__row__directory"
-                  : "filesystem__row__file"
+                  ? "filesystemRowDirectory"
+                  : "filesystemRowFile"
               }
             >
               {item.type === "directory" ? (
@@ -188,9 +202,9 @@ const useCommands = (
               )}
             </p>
             {item.type === "directory" ? (
-              <p className="filesystem__row__directory">{`<dir>`}</p>
+              <p className="filesystemRowDirectory">{`<dir>`}</p>
             ) : (
-              <p className="filesystem__row__file">{item.size}kb</p>
+              <p className="filesystemRowFile">{item.size}kb</p>
             )}
           </div>
         ));
@@ -198,8 +212,8 @@ const useCommands = (
         pushToHistory(
           <>
             <div>
-              <span style={{ color: "orange" }}>
-                <strong>Project filesystem</strong>
+              <span style={{ color: "white" }}>
+                <strong>root/{directory}</strong>
               </span>
               {fileListElements}
             </div>
@@ -215,103 +229,83 @@ const useCommands = (
     const token = getTokenFromLocalStorage();
 
     triggerUpdate();
-
-    //const currentCommand = command.toLowerCase().trim();
-    let currentCommand: any = "";
-    let directory = localStorage.getItem("directory");
-    if (directory === "") {
-      currentCommand = localStorage.getItem("command");
+    const verifyCommand = localStorage.getItem("command");
+    if (verifyCommand === "..") {
+      back();
+    } else if (verifyCommand === ".") {
+      root();
     } else {
-      currentCommand = directory + `\\` + localStorage.getItem("command");
-    }
-    await axios
-      .get(apiUrlDirectory, {
-        params: { dir: currentCommand },
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        console.log("Response:", response.data);
-        console.log(response.data.exists);
-        if (response.data.exists === true) {
-          console.log("entrato");
-          console.log(response.data.exists);
-          console.log(directory);
+      const notAllowedString: string[] = [
+        "..",
+        ".",
+        "/",
+        "//",
+        "\\",
+        "\\\\",
+        "'",
+        '"',
+      ];
 
-          setDirectory(currentCommand);
-          localStorage.setItem("directory", currentCommand);
+      if (verifyCommand !== null && !notAllowedString.includes(verifyCommand)) {
+        let currentCommand: any = "";
+        let directory = localStorage.getItem("directory");
+        if (directory === "") {
+          currentCommand = localStorage.getItem("command");
         } else {
-          pushToHistory(
-            <>
-              <div>
-                <span style={{ color: "red" }}>
-                  <strong>Directory not found</strong>
-                </span>
-              </div>
-            </>
-          );
+          currentCommand = directory + `\\` + localStorage.getItem("command");
         }
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
+
+        await axios
+          .get(apiUrlDirectory, {
+            params: { dir: currentCommand },
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          })
+          .then((response) => {
+            console.log("Response:", response.data);
+            console.log(response.data.exists);
+            if (response.data.exists === true) {
+              setDirectory(currentCommand);
+              localStorage.setItem("directory", currentCommand);
+            } else {
+              pushToHistory(
+                <>
+                  <div>
+                    <span style={{ color: "red" }}>
+                      <strong>Directory not found</strong>
+                    </span>
+                  </div>
+                </>
+              );
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      }
+    }
   };
 
-  /*
-  
-  const cd = async () => {
-    const token = getTokenFromLocalStorage();
-    const directory = localStorage.getItem("directory");
-    await axios
-      .get<ApiResponse>(apiUrl, {
-        params: { directory: directory },
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        console.log("Response:", response.data);
-        const fileList = response.data.items;
-        const fileListElements = fileList.map((item, index) => (
-          <div key={index} className="filesystem__row">
-            <p
-              className={
-                item.type === "directory"
-                  ? "filesystem__row__directory"
-                  : "filesystem__row__file"
-              }
-            >
-              {item.type === "directory" ? (
-                <strong>/{item.name}</strong>
-              ) : (
-                <strong>{item.name}</strong>
-              )}
-            </p>
-            {item.type === "directory" ? (
-              <p className="filesystem__row__directory">{`<dir>`}</p>
-            ) : (
-              <p className="filesystem__row__file">{item.size}kb</p>
-            )}
-          </div>
-        ));
+  const back = async () => {
+    let directory: string | null = localStorage.getItem("directory");
 
-        pushToHistory(
-          <>
-            <div>
-              <span style={{ color: "orange" }}>
-                <strong>Project filesystem</strong>
-              </span>
-              {fileListElements}
-            </div>
-          </>
-        );
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
+    if (directory !== null && directory !== "") {
+      if (directory.includes("\\")) {
+        directory = directory.substring(0, directory.lastIndexOf("\\"));
+        localStorage.setItem("directory", directory);
+        setDirectory(directory);
+      } else {
+        localStorage.setItem("directory", "");
+        setDirectory("");
+      }
+    }
   };
-  */
+
+  const root = async () => {
+    localStorage.setItem("directory", "");
+    setDirectory("");
+  };
 
   const commands = useMemo(
     () => ({
@@ -325,6 +319,8 @@ const useCommands = (
       dir: ls,
       clear: clear,
       cd: cd,
+      "cd.": root,
+      "cd..": back,
     }),
     [pushToHistory, commandsHistory]
   );

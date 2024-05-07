@@ -39,7 +39,7 @@ const TextAnimation: React.FC<TextAnimationProps> = ({
     }
   }, [currentTextIndex, texts, onFinishAnimation]);
 
-  return <div className="terminal__line__animation">{displayText}</div>;
+  return <div className="terminalLineAnimation">{displayText}</div>;
 };
 
 export default TextAnimation;
