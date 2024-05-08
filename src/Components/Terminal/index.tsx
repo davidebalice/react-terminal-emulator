@@ -24,7 +24,7 @@ export const Terminal = forwardRef(
     const inputRef = useRef<HTMLInputElement>();
     const [input, setInputValue] = useState<string>("");
     const [currentIndex, setCurrentIndex] = useState<number>(0);
-    const { directory, command, setCommand } = useContext(Context);
+    const { directory, command, setCommand, file, setFile } = useContext(Context);
     const [animationFinished, setAnimationFinished] = useState<boolean>(false);
 
     useEffect(() => {
@@ -58,6 +58,11 @@ export const Terminal = forwardRef(
           if (commandName === "cd" && commandArgs[0].length >= 2) {
             setCommand(commandArgs[0]);
             localStorage.setItem("command", commandArgs[0]);
+          }
+
+          if (commandName === "file" && commandArgs[0].length >= 2) {
+            setFile(commandArgs[0]);
+            localStorage.setItem("file", commandArgs[0]);
           }
 
           if (commandToExecute) {

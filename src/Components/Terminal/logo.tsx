@@ -23,7 +23,6 @@ export const logo = (
 );
 
 export const logoText = [
-  " ",
   "Starting server, please wait.",
   " ",
   " ",

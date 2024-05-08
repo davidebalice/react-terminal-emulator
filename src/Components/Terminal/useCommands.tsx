@@ -10,6 +10,7 @@ const useCommands = (
   setOpenTerminal: any,
   commandsHistory: any
 ) => {
+  const apiUrlFiles: string = process.env.REACT_APP_FILES_API_URL || "";
   const apiUrlFile: string = process.env.REACT_APP_FILE_API_URL || "";
   const apiUrlDirectory: string = process.env.REACT_APP_CHECKDIR_URL || "";
   const { setDirectory, command, triggerUpdate } = useContext(Context);
@@ -67,10 +68,6 @@ const useCommands = (
           <p className="terminalCommandText">close terminal</p>
         </div>
         <div className="terminalRow">
-          <p className="terminalCommand">email</p>
-          <p className="terminalCommandText">send an email to me</p>
-        </div>
-        <div className="terminalRow">
           <p className="terminalCommand">github</p>
           <p className="terminalCommandText">show source of this project</p>
         </div>
@@ -99,16 +96,38 @@ const useCommands = (
   const github = async () => {
     pushToHistory(
       <>
-        <div className="terminalRow">
+        <br />
+        <div className="terminalTextRow">
+          <span style={{ color: "orange" }}>
+            <strong>Backend filesystem node server</strong>
+          </span>
+          <br />
           <a
-            href="https://github.com/davidebalice"
+            href="https://github.com/davidebalice/node-file-system-api"
             target="_blank"
             title="github db"
             rel="noreferrer"
             className="terminalLink"
           >
-            https://github.com/davidebalice
+            https://github.com/davidebalice/node-file-system-api
           </a>
+          <br />
+          <br />
+          <span style={{ color: "orange" }}>
+            <strong>Frontend React</strong>
+          </span>
+          <br />
+          <a
+            href="https://github.com/davidebalice/react-terminal-emulator"
+            target="_blank"
+            title="github db"
+            rel="noreferrer"
+            className="terminalLink"
+          >
+            https://github.com/davidebalice/react-terminal-emulator
+          </a>
+          <br />
+
           <br />
           <br />
         </div>
@@ -123,7 +142,12 @@ const useCommands = (
   const site = async () => {
     pushToHistory(
       <>
+        <br />
         <div className="terminalTextRow">
+          <span style={{ color: "orange" }}>
+            <strong>My website</strong>
+          </span>
+          <br />
           <a
             href="https://www.davidebalice.dev"
             target="_blank"
@@ -141,6 +165,7 @@ const useCommands = (
   const info = async () => {
     pushToHistory(
       <>
+        <br />
         <span style={{ color: "orange" }}>
           <strong>Terminal info</strong>
         </span>
@@ -151,6 +176,21 @@ const useCommands = (
           Possible uses are interaction with files system, file creation,
           setting permissions, viewing information, generating passwords and
           more.
+        </div>
+      </>
+    );
+  };
+
+  const skills = async () => {
+    pushToHistory(
+      <>
+        <br />
+        <span style={{ color: "orange" }}>
+          <strong>Skills</strong>
+        </span>
+        <div className="terminalTextRow">
+          Backend:
+          <br />
         </div>
       </>
     );
@@ -177,7 +217,7 @@ const useCommands = (
     const token = getTokenFromLocalStorage();
     let directory = localStorage.getItem("directory");
     await axios
-      .get<ApiResponse>(apiUrlFile, {
+      .get<ApiResponse>(apiUrlFiles, {
         params: { dir: directory },
         headers: {
           Authorization: `Bearer ${token}`,
@@ -281,9 +321,78 @@ const useCommands = (
             }
           })
           .catch((error) => {
-            console.error("Error:", error);
+            pushToHistory(
+              <>
+                <div>
+                  <span style={{ color: "red" }}>
+                    <strong>Directory not found</strong>
+                  </span>
+                </div>
+              </>
+            );
           });
       }
+    }
+  };
+
+  const file = async () => {
+    const token = getTokenFromLocalStorage();
+    console.log("qui");
+    triggerUpdate();
+    const verifyFile = localStorage.getItem("file");
+
+    console.log(verifyFile);
+
+    const notAllowedString: string[] = [
+      "..",
+      ".",
+      "/",
+      "//",
+      "\\",
+      "\\\\",
+      "'",
+      '"',
+    ];
+
+    if (verifyFile !== null && !notAllowedString.includes(verifyFile)) {
+      let directory = localStorage.getItem("directory");
+
+      await axios
+        .get(apiUrlFile, {
+          params: { dir: directory, filename: verifyFile },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((response) => {
+          console.log("Response:", response.data);
+          console.log("error:", response.data.error);
+
+          //modal
+
+          /*
+          pushToHistory(
+            <>
+              <div>
+                <span style={{ color: "red" }}>
+                  <strong>{response.data}</strong>
+                </span>
+              </div>
+            </>
+          );
+          */
+        })
+        .catch((error) => {
+          pushToHistory(
+            <>
+              <div>
+                <span style={{ color: "red" }}>
+                  <strong>file not found</strong>
+                </span>
+              </div>
+            </>
+          );
+        });
     }
   };
 
@@ -312,9 +421,11 @@ const useCommands = (
       help: commandlist,
       h: commandlist,
       info: info,
+      file: file,
       github: github,
       close: close,
       site: site,
+      skills: skills,
       ls: ls,
       dir: ls,
       clear: clear,
