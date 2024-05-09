@@ -1,12 +1,15 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
+import Modal from "./Components/Modal";
 import { Terminal } from "./Components/Terminal";
-import { logo } from "./Components/Terminal/logo";
 import useCommands from "./Components/Terminal/useCommands";
 import { useTerminal } from "./Components/Terminal/useTerminal";
 import { Context } from "./context/DataContext";
 
 function App() {
   const [commandsHistory, setCommandsHistory] = useState<string[]>([]);
+  const [isOpenModal, setIsOpenModal] = useState(false);
+  const [modalData, setModalData] = useState<string>("");
+  const [modalTitle, setModalTitle] = useState<string>("");
   const { directory, setDirectory, command, setCommand } = useContext(Context);
   const {
     history,
@@ -22,15 +25,31 @@ function App() {
     setUsername,
   } = useTerminal();
 
+  const openModalWithData = (data: any, title: string) => {
+    setIsOpenModal(true);
+    setModalData(data);
+    setModalTitle(title);
+  };
+
+  const closeModal = () => {
+    setIsOpenModal(false);
+    setModalData("");
+  };
+
   const commands = useCommands(
     pushToHistory,
     setHistory,
     setOpenTerminal,
-    commandsHistory
+    commandsHistory,
+    openModalWithData,
+    closeModal
   );
 
   return (
     <>
+      <Modal isOpen={isOpenModal} onClose={closeModal} title={modalTitle}>
+        <pre>{modalData}</pre>
+      </Modal>
       <Terminal
         history={history}
         openTerminal={openTerminal}

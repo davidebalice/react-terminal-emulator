@@ -8,7 +8,9 @@ const useCommands = (
   pushToHistory: any,
   setHistory: any,
   setOpenTerminal: any,
-  commandsHistory: any
+  commandsHistory: any,
+  openModalWithData: (data: any, title:string) => void,
+  closeModal: () => void
 ) => {
   const apiUrlFiles: string = process.env.REACT_APP_FILES_API_URL || "";
   const apiUrlFile: string = process.env.REACT_APP_FILE_API_URL || "";
@@ -66,6 +68,10 @@ const useCommands = (
         <div className="terminalRow">
           <p className="terminalCommand">close</p>
           <p className="terminalCommandText">close terminal</p>
+        </div>
+        <div className="terminalRow">
+          <p className="terminalCommand">file [filename]</p>
+          <p className="terminalCommandText">open file and view source code</p>
         </div>
         <div className="terminalRow">
           <p className="terminalCommand">github</p>
@@ -368,7 +374,8 @@ const useCommands = (
           console.log("Response:", response.data);
           console.log("error:", response.data.error);
 
-          //modal
+          openModalWithData(response.data.content,response.data.title);
+          //closeModal: any
 
           /*
           pushToHistory(

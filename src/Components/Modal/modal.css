@@ -1,0 +1,82 @@
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 1001;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  text-align: left;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.5) transparent;
+  font-family: "IBM Plex Mono", Consolas, Menlo, Monaco, "Courier New", Courier,
+  monospace;
+}
+
+.modal.open {
+  display: flex !important;
+}
+
+.modalContainer {
+  background-color: #3c3c3c;
+  border-radius: 5px;
+  position: relative;
+  width: 50%;
+  height: 50%;
+  color: #c4c4c4;
+  overflow-y: auto;
+}
+
+.modalContent {
+  padding: 20px;
+}
+
+@media only screen and (max-width: 700px) {
+  .modalContainer {
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    max-height: none;
+  }
+
+  .modalContent {
+    padding: 10px;
+  }
+}
+
+.modalTitle {
+    font-size: 13px;
+    margin-left:8px
+  }
+
+.modalClose {
+  cursor: pointer;
+  font-size: 25px;
+  font-weight: bold;
+  margin-right:8px
+}
+
+.modalContainer::-webkit-scrollbar {
+  width: 4px;
+}
+
+.modalContainer::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+.modalContainer::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+.modalHeader {
+  width: 100%;
+  height: 34px;
+  background: #333;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
