@@ -44,10 +44,6 @@ const useCommands = (
           <strong>Command list</strong>
         </span>
         <div className="terminalRow">
-          <p className="terminalCommand">about</p>
-          <p className="terminalCommandText">some info about me</p>
-        </div>
-        <div className="terminalRow">
           <p className="terminalCommand">cd [directory]</p>
           <p className="terminalCommandText">navigate to directory</p>
         </div>
@@ -70,6 +66,12 @@ const useCommands = (
           <p className="terminalCommandText">close terminal</p>
         </div>
         <div className="terminalRow">
+          <p className="terminalCommand">dir</p>
+          <p className="terminalCommandText">
+            show real file system of this project
+          </p>
+        </div>
+        <div className="terminalRow">
           <p className="terminalCommand">file [filename]</p>
           <p className="terminalCommandText">open file and view source code</p>
         </div>
@@ -84,7 +86,7 @@ const useCommands = (
         <div className="terminalRow">
           <p className="terminalCommand">ls</p>
           <p className="terminalCommandText">
-            show real list of file of this project
+            show real file system of this project
           </p>
         </div>
         <div className="terminalRow">
@@ -197,6 +199,11 @@ const useCommands = (
         <div className="terminalTextRow">
           Backend:
           <br />
+          Php, Laravel, Node, Express, Java, Spring Boot
+          <br /><br />
+          Frontend:
+          <br />
+          React, Angular, Javascript, Typescript, jQuery
         </div>
       </>
     );
