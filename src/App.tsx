@@ -47,6 +47,9 @@ function App() {
 
   return (
     <>
+      <div className="terminalHeader">
+        <div className="terminalHeaderTitle">Db Terminal</div>
+      </div>
       <Modal isOpen={isOpenModal} onClose={closeModal} title={modalTitle}>
         <pre>{modalData}</pre>
       </Modal>
