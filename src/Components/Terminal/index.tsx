@@ -24,7 +24,7 @@ export const Terminal = forwardRef(
     const inputRef = useRef<HTMLInputElement>();
     const [input, setInputValue] = useState<string>("");
     const [currentIndex, setCurrentIndex] = useState<number>(0);
-    const { directory, command, setCommand, file, setFile } = useContext(Context);
+    const { directory, setCommand, setFile, setEdit } = useContext(Context);
     const [animationFinished, setAnimationFinished] = useState<boolean>(false);
 
     useEffect(() => {
@@ -63,6 +63,15 @@ export const Terminal = forwardRef(
           if (commandName === "file" && commandArgs[0].length >= 2) {
             setFile(commandArgs[0]);
             localStorage.setItem("file", commandArgs[0]);
+          }
+
+          if (commandName === "edit" && commandArgs[0].length >= 2) {
+            setEdit(commandArgs[0]);
+            localStorage.setItem("edit", commandArgs[0]);
+          }
+
+          if (commandName === "new" && commandArgs[0].length >= 2) {
+            localStorage.setItem("new", commandArgs[0]);
           }
 
           if (commandToExecute) {
@@ -134,9 +143,7 @@ export const Terminal = forwardRef(
               <div className="terminalPromptLabel">{username + `>`}</div>
               <div className="terminalPromptRoot">root/</div>
               {directory !== "" && directory != null && (
-                <div className="terminalPromptDirectory">
-                  {directory + `/`}
-                </div>
+                <div className="terminalPromptDirectory">{directory + `/`}</div>
               )}
 
               <div className="terminalPromptInput">

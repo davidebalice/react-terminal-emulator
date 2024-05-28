@@ -8,6 +8,7 @@ import { Context } from "./context/DataContext";
 function App() {
   const [commandsHistory, setCommandsHistory] = useState<string[]>([]);
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const [isEditModal, setEditModal] = useState(false);
   const [modalData, setModalData] = useState<string>("");
   const [modalTitle, setModalTitle] = useState<string>("");
   const { directory, setDirectory, command, setCommand } = useContext(Context);
@@ -16,7 +17,6 @@ function App() {
     pushToHistory,
     setHistory,
     setTerminalRef,
-    resetTerminal,
     openTerminal,
     setOpenTerminal,
     openLogin,
@@ -25,8 +25,9 @@ function App() {
     setUsername,
   } = useTerminal();
 
-  const openModalWithData = (data: any, title: string) => {
+  const openModalWithData = (data: any, title: string, edit: boolean) => {
     setIsOpenModal(true);
+    setEditModal(edit);
     setModalData(data);
     setModalTitle(title);
   };
@@ -50,7 +51,7 @@ function App() {
       <div className="terminalHeader">
         <div className="terminalHeaderTitle">Db Terminal</div>
       </div>
-      <Modal isOpen={isOpenModal} onClose={closeModal} title={modalTitle}>
+      <Modal isOpen={isOpenModal} onClose={closeModal} title={modalTitle} edit={isEditModal}>
         <pre>{modalData}</pre>
       </Modal>
       <Terminal

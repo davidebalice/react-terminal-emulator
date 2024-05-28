@@ -9,16 +9,28 @@ const useCommands = (
   setHistory: any,
   setOpenTerminal: any,
   commandsHistory: any,
-  openModalWithData: (data: any, title:string) => void,
+  openModalWithData: (data: any, title: string, edit: boolean) => void,
   closeModal: () => void
 ) => {
   const apiUrlFiles: string = process.env.REACT_APP_FILES_API_URL || "";
   const apiUrlFile: string = process.env.REACT_APP_FILE_API_URL || "";
+  const apiUrlNewFile: string = process.env.REACT_APP_NEW_FILE_API_URL || "";
   const apiUrlDirectory: string = process.env.REACT_APP_CHECKDIR_URL || "";
-  const { setDirectory, command, triggerUpdate } = useContext(Context);
+  const { setDirectory, triggerUpdate } = useContext(Context);
   interface ApiResponse {
     items: FileItem[];
   }
+
+  const notAllowedString: string[] = [
+    "..",
+    ".",
+    "/",
+    "//",
+    "\\",
+    "\\\\",
+    "'",
+    '"',
+  ];
 
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
@@ -70,6 +82,10 @@ const useCommands = (
           <p className="terminalCommandText">
             show real file system of this project
           </p>
+        </div>
+        <div className="terminalRow">
+          <p className="terminalCommand">edit [filename]</p>
+          <p className="terminalCommandText">open and edit file</p>
         </div>
         <div className="terminalRow">
           <p className="terminalCommand">file [filename]</p>
@@ -200,7 +216,8 @@ const useCommands = (
           Backend:
           <br />
           Php, Laravel, Node, Express, Java, Spring Boot
-          <br /><br />
+          <br />
+          <br />
           Frontend:
           <br />
           React, Angular, Javascript, Typescript, jQuery
@@ -288,17 +305,6 @@ const useCommands = (
     } else if (verifyCommand === ".") {
       root();
     } else {
-      const notAllowedString: string[] = [
-        "..",
-        ".",
-        "/",
-        "//",
-        "\\",
-        "\\\\",
-        "'",
-        '"',
-      ];
-
       if (verifyCommand !== null && !notAllowedString.includes(verifyCommand)) {
         let currentCommand: any = "";
         let directory = localStorage.getItem("directory");
@@ -350,22 +356,8 @@ const useCommands = (
 
   const file = async () => {
     const token = getTokenFromLocalStorage();
-    console.log("qui");
     triggerUpdate();
     const verifyFile = localStorage.getItem("file");
-
-    console.log(verifyFile);
-
-    const notAllowedString: string[] = [
-      "..",
-      ".",
-      "/",
-      "//",
-      "\\",
-      "\\\\",
-      "'",
-      '"',
-    ];
 
     if (verifyFile !== null && !notAllowedString.includes(verifyFile)) {
       let directory = localStorage.getItem("directory");
@@ -381,20 +373,84 @@ const useCommands = (
           console.log("Response:", response.data);
           console.log("error:", response.data.error);
 
-          openModalWithData(response.data.content,response.data.title);
+          openModalWithData(response.data.content, response.data.title, false);
           //closeModal: any
-
-          /*
+        })
+        .catch((error) => {
           pushToHistory(
             <>
               <div>
                 <span style={{ color: "red" }}>
-                  <strong>{response.data}</strong>
+                  <strong>file not found</strong>
                 </span>
               </div>
             </>
           );
-          */
+        });
+    }
+  };
+
+  const edit = async () => {
+    const token = getTokenFromLocalStorage();
+    triggerUpdate();
+    const verifyFile = localStorage.getItem("edit");
+
+    if (verifyFile !== null && !notAllowedString.includes(verifyFile)) {
+      let directory = localStorage.getItem("directory");
+
+      await axios
+        .get(apiUrlFile, {
+          params: { dir: directory, filename: verifyFile },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((response) => {
+          console.log("Response:", response.data);
+          console.log("error:", response.data.error);
+
+          openModalWithData(response.data.content, response.data.title, true);
+        })
+        .catch((error) => {
+          pushToHistory(
+            <>
+              <div>
+                <span style={{ color: "red" }}>
+                  <strong>file not found</strong>
+                </span>
+              </div>
+            </>
+          );
+        });
+    }
+  };
+
+  const newfile = async () => {
+    const token = getTokenFromLocalStorage();
+    triggerUpdate();
+    const verifyFile = localStorage.getItem("new");
+
+    console.log(verifyFile);
+
+    if (verifyFile !== null && !notAllowedString.includes(verifyFile)) {
+      let directory = localStorage.getItem("directory");
+
+      await axios
+        .post(
+          apiUrlNewFile,
+          {
+            dir: directory,
+            filename: verifyFile,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((response) => {
+          console.log("Response:", response.data);
+          console.log("error:", response.data.error);
         })
         .catch((error) => {
           pushToHistory(
@@ -435,6 +491,7 @@ const useCommands = (
       help: commandlist,
       h: commandlist,
       info: info,
+      edit: edit,
       file: file,
       github: github,
       close: close,
@@ -442,6 +499,7 @@ const useCommands = (
       skills: skills,
       ls: ls,
       dir: ls,
+      new: newfile,
       clear: clear,
       cd: cd,
       "cd.": root,

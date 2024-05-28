@@ -5,6 +5,7 @@ export const Context = createContext();
 export function DataProvider({ children }) {
   const [command, setCommand] = useState("");
   const [file, setFile] = useState("");
+  const [edit, setEdit] = useState("");
   const [directory, setDirectory] = useState("");
   const [forceUpdate, setForceUpdate] = useState(false);
 
@@ -19,6 +20,8 @@ export function DataProvider({ children }) {
         setCommand,
         file,
         setFile,
+        edit,
+        setEdit,
         directory,
         setDirectory,
         triggerUpdate,

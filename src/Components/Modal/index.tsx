@@ -4,11 +4,12 @@ import "./modal.css";
 interface ModalProps {
   title: string;
   isOpen: boolean;
+  edit: boolean;
   onClose: () => void;
   children?: React.ReactNode;
 }
 
-const Modal: React.FC<ModalProps> = ({ title, isOpen, onClose, children }) => {
+const Modal: React.FC<ModalProps> = ({ title, isOpen, onClose, children, edit }) => {
   const [isMounted, setIsMounted] = useState(false);
   const componentRef = useRef<HTMLDivElement>(null);
 
@@ -58,6 +59,7 @@ const Modal: React.FC<ModalProps> = ({ title, isOpen, onClose, children }) => {
         </div>
         <div className="modalContent" ref={componentRef}>
           {children}
+          {edit && 'abilita modifiche'}
         </div>
       </div>
     </div>
