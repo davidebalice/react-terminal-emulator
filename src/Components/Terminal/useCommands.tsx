@@ -106,6 +106,10 @@ const useCommands = (
           </p>
         </div>
         <div className="terminalRow">
+          <p className="terminalCommand">new [filename]</p>
+          <p className="terminalCommandText">create new file</p>
+        </div>
+        <div className="terminalRow">
           <p className="terminalCommand">site</p>
           <p className="terminalCommandText">show my website</p>
         </div>
@@ -450,6 +454,17 @@ const useCommands = (
         )
         .then((response) => {
           console.log("Response:", response.data);
+          if (response.data.status === "demo") {
+            pushToHistory(
+              <>
+                <div>
+                  <span style={{ color: "red" }}>
+                    <strong>demo mode: write file is not allowed</strong>
+                  </span>
+                </div>
+              </>
+            );
+          }
           console.log("error:", response.data.error);
         })
         .catch((error) => {
