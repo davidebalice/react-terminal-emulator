@@ -55,23 +55,37 @@ export const Terminal = forwardRef(
           }
 
           const commandToExecute = commands?.[commandName];
+
           if (commandName === "cd" && commandArgs[0].length >= 2) {
             setCommand(commandArgs[0]);
-            localStorage.setItem("command", commandArgs[0]);
+            sessionStorage.setItem("command", commandArgs[0]);
           }
 
           if (commandName === "file" && commandArgs[0].length >= 2) {
             setFile(commandArgs[0]);
-            localStorage.setItem("file", commandArgs[0]);
+            sessionStorage.setItem("file", commandArgs[0]);
           }
 
           if (commandName === "edit" && commandArgs[0].length >= 2) {
             setEdit(commandArgs[0]);
-            localStorage.setItem("edit", commandArgs[0]);
+            sessionStorage.setItem("edit", commandArgs[0]);
           }
 
           if (commandName === "new" && commandArgs[0].length >= 2) {
-            localStorage.setItem("new", commandArgs[0]);
+            sessionStorage.setItem("new", commandArgs[0]);
+          }
+
+          if (commandName === "delete" && commandArgs[0].length >= 2) {
+            sessionStorage.setItem("delete", commandArgs[0]);
+          }
+
+          if (
+            commandName === "rename" &&
+            commandArgs[0].length >= 2 &&
+            commandArgs[1].length >= 2
+          ) {
+            sessionStorage.setItem("rename", commandArgs[0]);
+            sessionStorage.setItem("newname", commandArgs[1]);
           }
 
           if (commandToExecute) {
@@ -79,7 +93,6 @@ export const Terminal = forwardRef(
 
             setInputValue("");
             const newCommands = [...commandsHistory, inputCommand];
-            console.log(newCommands);
             if (newCommands) {
               setCommandsHistory(newCommands);
             }

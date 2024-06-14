@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { IoCopyOutline } from "react-icons/io5";
-import { IoSave } from "react-icons/io5";
+import { IoCopyOutline, IoSave } from "react-icons/io5";
 import "./modal.css";
 interface ModalProps {
   title: string;
@@ -9,6 +8,7 @@ interface ModalProps {
   onClose: () => void;
   children?: React.ReactNode;
 }
+const apiUrlEditFile: string = process.env.REACT_APP_EDIT_FILE_API_URL || "";
 
 const Modal: React.FC<ModalProps> = ({
   title,
@@ -20,9 +20,10 @@ const Modal: React.FC<ModalProps> = ({
   const [isMounted, setIsMounted] = useState(false);
   const componentRef = useRef<HTMLDivElement>(null);
   const [content, setContent] = useState("");
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    if (edit && content === "" && children) {
+    if (edit) {
       const initialValue = componentRef.current?.innerText;
       setContent(initialValue || "");
     }
@@ -59,22 +60,27 @@ const Modal: React.FC<ModalProps> = ({
   };
 
   const saveContent = () => {
-    // Esegui la logica per inviare il contenuto al backend
-    // Puoi utilizzare fetch o una libreria come axios per effettuare una chiamata HTTP
-    fetch("url-del-tuo-backend", {
+    fetch(apiUrlEditFile, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ content }),
+      body: JSON.stringify({
+        filename: title,
+        dir: sessionStorage.getItem("directory"),
+        content: content,
+      }),
     })
-      .then((response) => {
-        // Gestisci la risposta del backend
-        console.log("Contenuto salvato con successo:", response);
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === "demo") {
+          setError("Demo mode: write is not allowed");
+        } else {
+          console.log("File saved successfully:", data);
+        }
       })
       .catch((error) => {
-        // Gestisci gli errori
-        console.error("Errore durante il salvataggio del contenuto:", error);
+        console.error("Save error:", error);
       });
   };
 
@@ -108,7 +114,8 @@ const Modal: React.FC<ModalProps> = ({
           contentEditable={edit}
           onInput={handleContentChange}
         >
-          children
+          {error && <p style={{ color: "red" }}>{error}</p>}
+          {children}
         </div>
       </div>
     </div>

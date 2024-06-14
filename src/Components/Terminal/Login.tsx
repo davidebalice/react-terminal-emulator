@@ -47,13 +47,13 @@ export const Login = (props: LoginProps) => {
           .then((response) => {
             console.log("Response:", response.data);
             if (response.data.status === "success") {
-              localStorage.setItem("token", response.data.token);
+              sessionStorage.setItem("token", response.data.token);
               setOpenLogin(0);
               setOpenTerminal(true);
               setError(false);
               setUsername(response.data.user.username);
             } else {
-              localStorage.setItem("token", "");
+              sessionStorage.setItem("token", "");
               setOpenLogin(1);
               setOpenTerminal(false);
               setError(true);

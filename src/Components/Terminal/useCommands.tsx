@@ -16,6 +16,9 @@ const useCommands = (
   const apiUrlFile: string = process.env.REACT_APP_FILE_API_URL || "";
   const apiUrlNewFile: string = process.env.REACT_APP_NEW_FILE_API_URL || "";
   const apiUrlDirectory: string = process.env.REACT_APP_CHECKDIR_URL || "";
+  const apiUrlDeleteFile: string = process.env.REACT_APP_DELETE || "";
+  const apiUrlRenameFile: string = process.env.REACT_APP_RENAME || "";
+
   const { setDirectory, triggerUpdate } = useContext(Context);
   interface ApiResponse {
     items: FileItem[];
@@ -45,8 +48,8 @@ const useCommands = (
     };
   }, [setOpenTerminal]);
 
-  const getTokenFromLocalStorage = () => {
-    return localStorage.getItem("token");
+  const getTokenFromStorage = () => {
+    return sessionStorage.getItem("token");
   };
 
   const commandlist = async () => {
@@ -76,6 +79,10 @@ const useCommands = (
         <div className="terminalRow">
           <p className="terminalCommand">close</p>
           <p className="terminalCommandText">close terminal</p>
+        </div>
+        <div className="terminalRow">
+          <p className="terminalCommand">delete [filename]</p>
+          <p className="terminalCommandText">delete file</p>
         </div>
         <div className="terminalRow">
           <p className="terminalCommand">dir</p>
@@ -110,6 +117,10 @@ const useCommands = (
           <p className="terminalCommandText">create new file</p>
         </div>
         <div className="terminalRow">
+          <p className="terminalCommand">rename [filename] [new filename]</p>
+          <p className="terminalCommandText">rename file</p>
+        </div>
+        <div className="terminalRow">
           <p className="terminalCommand">site</p>
           <p className="terminalCommandText">show my website</p>
         </div>
@@ -127,7 +138,7 @@ const useCommands = (
         <br />
         <div className="terminalTextRow">
           <span style={{ color: "orange" }}>
-            <strong>Backend filesystem node server</strong>
+            <strong>Backend filesystem Node Api</strong>
           </span>
           <br />
           <a
@@ -248,8 +259,8 @@ const useCommands = (
   };
 
   const ls = async () => {
-    const token = getTokenFromLocalStorage();
-    let directory = localStorage.getItem("directory");
+    const token = getTokenFromStorage();
+    let directory = sessionStorage.getItem("directory");
     await axios
       .get<ApiResponse>(apiUrlFiles, {
         params: { dir: directory },
@@ -300,10 +311,10 @@ const useCommands = (
   };
 
   const cd = async () => {
-    const token = getTokenFromLocalStorage();
+    const token = getTokenFromStorage();
 
     triggerUpdate();
-    const verifyCommand = localStorage.getItem("command");
+    const verifyCommand = sessionStorage.getItem("command");
     if (verifyCommand === "..") {
       back();
     } else if (verifyCommand === ".") {
@@ -311,11 +322,11 @@ const useCommands = (
     } else {
       if (verifyCommand !== null && !notAllowedString.includes(verifyCommand)) {
         let currentCommand: any = "";
-        let directory = localStorage.getItem("directory");
+        let directory = sessionStorage.getItem("directory");
         if (directory === "") {
-          currentCommand = localStorage.getItem("command");
+          currentCommand = sessionStorage.getItem("command");
         } else {
-          currentCommand = directory + `\\` + localStorage.getItem("command");
+          currentCommand = directory + `\\` + sessionStorage.getItem("command");
         }
 
         await axios
@@ -327,10 +338,9 @@ const useCommands = (
           })
           .then((response) => {
             console.log("Response:", response.data);
-            console.log(response.data.exists);
             if (response.data.exists === true) {
               setDirectory(currentCommand);
-              localStorage.setItem("directory", currentCommand);
+              sessionStorage.setItem("directory", currentCommand);
             } else {
               pushToHistory(
                 <>
@@ -359,12 +369,12 @@ const useCommands = (
   };
 
   const file = async () => {
-    const token = getTokenFromLocalStorage();
+    const token = getTokenFromStorage();
     triggerUpdate();
-    const verifyFile = localStorage.getItem("file");
+    const verifyFile = sessionStorage.getItem("file");
 
     if (verifyFile !== null && !notAllowedString.includes(verifyFile)) {
-      let directory = localStorage.getItem("directory");
+      let directory = sessionStorage.getItem("directory");
 
       await axios
         .get(apiUrlFile, {
@@ -375,10 +385,7 @@ const useCommands = (
         })
         .then((response) => {
           console.log("Response:", response.data);
-          console.log("error:", response.data.error);
-
           openModalWithData(response.data.content, response.data.title, false);
-          //closeModal: any
         })
         .catch((error) => {
           pushToHistory(
@@ -395,12 +402,12 @@ const useCommands = (
   };
 
   const edit = async () => {
-    const token = getTokenFromLocalStorage();
+    const token = getTokenFromStorage();
     triggerUpdate();
-    const verifyFile = localStorage.getItem("edit");
+    const verifyFile = sessionStorage.getItem("edit");
 
     if (verifyFile !== null && !notAllowedString.includes(verifyFile)) {
-      let directory = localStorage.getItem("directory");
+      let directory = sessionStorage.getItem("directory");
 
       await axios
         .get(apiUrlFile, {
@@ -430,14 +437,12 @@ const useCommands = (
   };
 
   const newfile = async () => {
-    const token = getTokenFromLocalStorage();
+    const token = getTokenFromStorage();
     triggerUpdate();
-    const verifyFile = localStorage.getItem("new");
-
-    console.log(verifyFile);
+    const verifyFile = sessionStorage.getItem("new");
 
     if (verifyFile !== null && !notAllowedString.includes(verifyFile)) {
-      let directory = localStorage.getItem("directory");
+      let directory = sessionStorage.getItem("directory");
 
       await axios
         .post(
@@ -481,28 +486,134 @@ const useCommands = (
     }
   };
 
+  const deleteFile = async () => {
+    const token = getTokenFromStorage();
+    triggerUpdate();
+    const verifyFile = sessionStorage.getItem("delete");
+
+    if (verifyFile !== null && !notAllowedString.includes(verifyFile)) {
+      let directory = sessionStorage.getItem("directory");
+
+      await axios
+        .post(
+          apiUrlDeleteFile,
+          {
+            dir: directory,
+            filename: verifyFile,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((response) => {
+          console.log("Response:", response.data);
+          if (response.data.status === "demo") {
+            pushToHistory(
+              <>
+                <div>
+                  <span style={{ color: "red" }}>
+                    <strong>demo mode: delete file is not allowed</strong>
+                  </span>
+                </div>
+              </>
+            );
+          }
+          console.log("error:", response.data.error);
+        })
+        .catch((error) => {
+          pushToHistory(
+            <>
+              <div>
+                <span style={{ color: "red" }}>
+                  <strong>file not found</strong>
+                </span>
+              </div>
+            </>
+          );
+        });
+    }
+  };
+
+  const renameFile = async () => {
+    const token = getTokenFromStorage();
+    triggerUpdate();
+    const oldFileName = sessionStorage.getItem("rename");
+    const newFileName = sessionStorage.getItem("newname");
+
+    if (oldFileName !== null && !notAllowedString.includes(oldFileName)) {
+      let directory = sessionStorage.getItem("directory");
+
+      await axios
+        .post(
+          apiUrlRenameFile,
+          {
+            dir: directory,
+            oldFileName: oldFileName,
+            newFileName: newFileName,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((response) => {
+          console.log("Response:", response.data);
+          if (response.data.status === "demo") {
+            pushToHistory(
+              <>
+                <div>
+                  <span style={{ color: "red" }}>
+                    <strong>demo mode: rename file is not allowed</strong>
+                  </span>
+                </div>
+              </>
+            );
+          }
+          console.log("error:", response.data.error);
+        })
+        .catch((error) => {
+          pushToHistory(
+            <>
+              <div>
+                <span style={{ color: "red" }}>
+                  <strong>file not found</strong>
+                </span>
+              </div>
+            </>
+          );
+        });
+    }
+  };
+
   const back = async () => {
-    let directory: string | null = localStorage.getItem("directory");
+    let directory: string | null = sessionStorage.getItem("directory");
 
     if (directory !== null && directory !== "") {
       if (directory.includes("\\")) {
         directory = directory.substring(0, directory.lastIndexOf("\\"));
-        localStorage.setItem("directory", directory);
+        sessionStorage.setItem("directory", directory);
         setDirectory(directory);
       } else {
-        localStorage.setItem("directory", "");
+        sessionStorage.setItem("directory", "");
         setDirectory("");
       }
     }
   };
 
   const root = async () => {
-    localStorage.setItem("directory", "");
+    sessionStorage.setItem("directory", "");
     setDirectory("");
   };
 
   const commands = useMemo(
     () => ({
+      clear: clear,
+      cd: cd,
+      "cd.": root,
+      "cd..": back,
       help: commandlist,
       h: commandlist,
       info: info,
@@ -514,11 +625,9 @@ const useCommands = (
       skills: skills,
       ls: ls,
       dir: ls,
+      rename: renameFile,
       new: newfile,
-      clear: clear,
-      cd: cd,
-      "cd.": root,
-      "cd..": back,
+      delete: deleteFile,
     }),
     [pushToHistory, commandsHistory]
   );

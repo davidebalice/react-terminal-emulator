@@ -3,9 +3,9 @@ import App from "./App";
 import { DataProvider } from "./context/DataContext";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
-localStorage.setItem("token", "");
-localStorage.setItem("directory", "");
-localStorage.setItem("command", "");
+sessionStorage.setItem("token", "");
+sessionStorage.setItem("directory", "");
+sessionStorage.setItem("command", "");
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
