@@ -140,50 +140,59 @@ export const Terminal = forwardRef(
     }, [animationFinished]);
 
     return (
-      <div className="terminal" ref={ref} onClick={focusInput}>
-        <TextAnimation
-          texts={logoText}
-          onFinishAnimation={handleAnimationFinish}
-        />
-        {history.map((line, index) => (
-          <div className="terminalLine" key={`terminal-line-${index}-${line}`}>
-            {line}
-          </div>
-        ))}
-        {openTerminal && (
-          <>
-            <div className="terminalPrompt">
-              <div className="terminalPromptLabel">{username + `>`}</div>
-              <div className="terminalPromptRoot">root/</div>
-              {directory !== "" && directory != null && (
-                <div className="terminalPromptDirectory">{directory + `/`}</div>
-              )}
-
-              <div className="terminalPromptInput">
-                <input
-                  type="text"
-                  value={input}
-                  onKeyDown={handleInputKeyDown}
-                  onChange={handleInputChange}
-                  // @ts-ignore
-                  ref={inputRef}
-                />
-                <div style={{ height: "50px" }}></div>
-              </div>
-            </div>
-          </>
-        )}
-        {(openLogin === 1 || openLogin === 2) && (
-          <Login
-            openTerminal={openTerminal}
-            setOpenTerminal={setOpenTerminal}
-            openLogin={openLogin}
-            setOpenLogin={setOpenLogin}
-            username={username}
-            setUsername={setUsername}
+      <>
+        <div className="scanlines"></div>  
+        <div className="refresh-line"></div>
+        <div className="terminal" ref={ref} onClick={focusInput}>
+          <TextAnimation
+            texts={logoText}
+            onFinishAnimation={handleAnimationFinish}
           />
-        )}
-      </div>
+          {history.map((line, index) => (
+            <div
+              className="terminalLine"
+              key={`terminal-line-${index}-${line}`}
+            >
+              {line}
+            </div>
+          ))}
+          {openTerminal && (
+            <>
+              <div className="terminalPrompt">
+                <div className="terminalPromptLabel">{username + `>`}</div>
+                <div className="terminalPromptRoot">root/</div>
+                {directory !== "" && directory != null && (
+                  <div className="terminalPromptDirectory">
+                    {directory + `/`}
+                  </div>
+                )}
+
+                <div className="terminalPromptInput">
+                  <input
+                    type="text"
+                    value={input}
+                    onKeyDown={handleInputKeyDown}
+                    onChange={handleInputChange}
+                    // @ts-ignore
+                    ref={inputRef}
+                  />
+                  <div style={{ height: "50px" }}></div>
+                </div>
+              </div>
+            </>
+          )}
+          {(openLogin === 1 || openLogin === 2) && (
+            <Login
+              openTerminal={openTerminal}
+              setOpenTerminal={setOpenTerminal}
+              openLogin={openLogin}
+              setOpenLogin={setOpenLogin}
+              username={username}
+              setUsername={setUsername}
+            />
+          )}
+        </div>
+      </>
     );
   }
 );

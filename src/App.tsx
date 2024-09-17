@@ -1,9 +1,9 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
+import { useLocation } from "react-router-dom";
 import Modal from "./Components/Modal";
 import { Terminal } from "./Components/Terminal";
 import useCommands from "./Components/Terminal/useCommands";
 import { useTerminal } from "./Components/Terminal/useTerminal";
-import { Context } from "./context/DataContext";
 
 function App() {
   const [commandsHistory, setCommandsHistory] = useState<string[]>([]);
@@ -11,7 +11,7 @@ function App() {
   const [isEditModal, setEditModal] = useState(false);
   const [modalData, setModalData] = useState<string>("");
   const [modalTitle, setModalTitle] = useState<string>("");
-  const { directory, setDirectory, command, setCommand } = useContext(Context);
+
   const {
     history,
     pushToHistory,
@@ -24,6 +24,10 @@ function App() {
     username,
     setUsername,
   } = useTerminal();
+
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const showHeader = searchParams.get("header") !== "no";
 
   const openModalWithData = (data: any, title: string, edit: boolean) => {
     setIsOpenModal(true);
@@ -48,10 +52,17 @@ function App() {
 
   return (
     <>
-      <div className="terminalHeader">
-        <div className="terminalHeaderTitle">Db Terminal</div>
-      </div>
-      <Modal isOpen={isOpenModal} onClose={closeModal} title={modalTitle} edit={isEditModal}>
+      {showHeader && (
+        <div className="terminalHeader">
+          <div className="terminalHeaderTitle">Db Terminal</div>
+        </div>
+      )}
+      <Modal
+        isOpen={isOpenModal}
+        onClose={closeModal}
+        title={modalTitle}
+        edit={isEditModal}
+      >
         <pre>{modalData}</pre>
       </Modal>
       <Terminal

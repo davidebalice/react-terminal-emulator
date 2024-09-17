@@ -323,10 +323,10 @@ const useCommands = (
       if (verifyCommand !== null && !notAllowedString.includes(verifyCommand)) {
         let currentCommand: any = "";
         let directory = sessionStorage.getItem("directory");
-        if (directory === "") {
+        if (directory === "" || directory === null) {
           currentCommand = sessionStorage.getItem("command");
         } else {
-          currentCommand = directory + `\\` + sessionStorage.getItem("command");
+          currentCommand = directory + `/` + sessionStorage.getItem("command");
         }
 
         await axios

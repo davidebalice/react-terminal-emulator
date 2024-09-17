@@ -1,4 +1,5 @@
 import ReactDOM from "react-dom/client";
+import { BrowserRouter } from "react-router-dom";
 import App from "./App";
 import { DataProvider } from "./context/DataContext";
 import "./index.css";
@@ -11,9 +12,11 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <>
-    <DataProvider>
-      <App />
-    </DataProvider>
+    <BrowserRouter>
+      <DataProvider>
+        <App />
+      </DataProvider>
+    </BrowserRouter>
   </>
 );
 

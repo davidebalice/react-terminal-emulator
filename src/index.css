@@ -1,5 +1,6 @@
 html {
   height: 100%;
+  overflow: hidden;
 }
 
 body {
@@ -13,6 +14,7 @@ body {
   position: relative;
   background-color: #3c3c3c;
   overflow: hidden;
+  filter: sepia(1) hue-rotate(90deg) brightness(1);
 }
 
 code {
@@ -22,4 +24,5 @@ code {
 
 #root {
   height: 100%;
+  overflow: hidden;
 }
