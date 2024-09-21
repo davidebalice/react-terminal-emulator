@@ -37,6 +37,7 @@
 .terminalPrompt {
   display: flex;
   align-items: center;
+  margin-bottom: 10%;
 }
 
 .terminalPromptLabel {

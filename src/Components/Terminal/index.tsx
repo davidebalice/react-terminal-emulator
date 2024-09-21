@@ -141,7 +141,7 @@ export const Terminal = forwardRef(
 
     return (
       <>
-        <div className="scanlines"></div>  
+        <div className="scanlines"></div>
         <div className="refresh-line"></div>
         <div className="terminal" ref={ref} onClick={focusInput}>
           <TextAnimation
@@ -176,7 +176,6 @@ export const Terminal = forwardRef(
                     // @ts-ignore
                     ref={inputRef}
                   />
-                  <div style={{ height: "50px" }}></div>
                 </div>
               </div>
             </>
