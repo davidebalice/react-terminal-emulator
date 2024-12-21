@@ -143,7 +143,12 @@ export const Terminal = forwardRef(
       <>
         <div className="scanlines"></div>
         <div className="refresh-line"></div>
-        <div className="terminal" ref={ref} onClick={focusInput}>
+        <div
+          className="terminal"
+          ref={ref}
+          onClick={focusInput}
+          onMouseEnter={focusInput}
+        >
           <TextAnimation
             texts={logoText}
             onFinishAnimation={handleAnimationFinish}
